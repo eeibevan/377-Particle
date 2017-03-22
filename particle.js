@@ -22,26 +22,6 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.color = color || randomRgbColor();
 }
 
-Particle.prototype.updateLocation = function (xBound, yBound) {
-    this.x += this.deltaX;
-    this.y += this.deltaY;
-    if (this.x > xBound) {
-        this.x = xBound;
-        this.deltaX = -this.deltaX;
-    } else if (this.x < 0) {
-        this.x = 0;
-        this.deltaX = -this.deltaX;
-    }
-
-    if (this.y > yBound) {
-        this.y = yBound;
-        this.deltaY = -this.deltaY;
-    } else if (this.y < 0) {
-        this.y = 0;
-        this.deltaY = -this.deltaY;
-    }
-};
-
 function ParticleSystem(n, xBound, yBound) {
     this.particles = [];
     this.xBound = xBound;
@@ -55,8 +35,16 @@ ParticleSystem.prototype.seed = function (n) {
 };
 
 ParticleSystem.prototype.update = function () {
-    for (var i = 0; i < this.particles.length; i++)
-        this.particles[i].updateLocation(this.xBound, this.yBound);
+    for (var i = 0; i < this.particles.length; i++) {
+        var par = this.particles[i];
+        par.x += par.deltaX;
+        par.y += par.deltaY;
+
+        if (par.x > this.xBound || par.x < 0)
+            par.deltaX = -par.deltaX;
+        if (par.y > this.yBound || par.y < 0)
+            par.deltaY = -par.deltaY;
+    }
 };
 
 function CanvasInteractor(canvas, particleSystem) {
