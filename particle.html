@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Particle</title>
+    <script src="lib/jquery-3.2.0.js"></script>
+    <script src="particle.js"></script>
+    <script>
+        var tmp;
+        $( document ).ready(function () {
+            tmp = new CanvasInteractor($('#particleCanvas').get(0));
+        });
+    </script>
+</head>
+<body>
+<canvas id="particleCanvas" width="500" height="500"></canvas>
+</body>
+</html>
