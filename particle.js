@@ -55,6 +55,38 @@ NullActor.prototype.onContact = function (particle) {
         particle.deltaY *= -1;
 };
 
+function ProduceActor(x, y, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color || randomRgbColor();
+
+    this.createOnTick = 20;
+    this.createTick = 0;
+}
+
+ProduceActor.prototype.act = function (system) {
+    if (++this.createTick === this.createOnTick) {
+        system.particles.push(new Particle(this.x + this.radius, this.y + this.radius, 1, 1));
+        this.createTick = 0;
+    }
+};
+
+ProduceActor.prototype.isInBounds = function () {
+    return false;
+};
+
+ProduceActor.prototype.onContact = function () {
+
+};
+
+ProduceActor.prototype.draw = function (ctx) {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+    ctx.fill();
+};
+
 NullActor.prototype.draw = function (ctx) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
@@ -73,6 +105,7 @@ ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
         this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
     this.actors.push(new NullActor(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
+    this.actors.push(new ProduceActor(20, 20, 5, 'green'));
 };
 
 ParticleSystem.prototype.update = function () {
