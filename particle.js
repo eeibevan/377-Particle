@@ -22,8 +22,44 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.color = color || randomRgbColor();
 }
 
+function NullActor(x, y, width, color) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.color = color || randomRgbColor();
+}
+
+NullActor.prototype.act = function (system) {
+    // Null Actor Does Nothing
+};
+
+NullActor.prototype.isInBounds = function (x, y) {
+    var isInX = x > this.x && x < this.x + this.width;
+    var isInY = y > this.y && y < this.y + this.width;
+    return isInX && isInY;
+};
+
+NullActor.prototype.onContact = function (particle) {
+    // TODO: Figure Out How To Make Bouncing Off Realistic
+    var cenX = this.x + this.width/2;
+    var cenY = this.y + this.width/2;
+
+    var deltaCenx = particle.x - cenX;
+    var deltaCenY = particle.y - cenY;
+
+    particle.deltaY = -particle.deltaY;
+    particle.deltaX = -particle.deltaX;
+};
+
+NullActor.prototype.draw = function (ctx) {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.width);
+};
+
 function ParticleSystem(n, xBound, yBound) {
     this.particles = [];
+    this.actors = [];
     this.xBound = xBound;
     this.yBound = yBound;
     this.seed(n)
@@ -32,6 +68,7 @@ function ParticleSystem(n, xBound, yBound) {
 ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
         this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
+    this.actors.push(new NullActor(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
 };
 
 ParticleSystem.prototype.update = function () {
@@ -40,10 +77,20 @@ ParticleSystem.prototype.update = function () {
         par.x += par.deltaX;
         par.y += par.deltaY;
 
+        for (var j = 0; j < this.actors.length; j++) {
+            if (this.actors[j].isInBounds(par.x, par.y)) {
+                this.actors[j].onContact(par);
+            }
+        }
+
         if (par.x > this.xBound || par.x < 0)
             par.deltaX = -par.deltaX;
         if (par.y > this.yBound || par.y < 0)
             par.deltaY = -par.deltaY;
+    }
+
+    for (var k = 0; k < this.actors.length; k++) {
+        this.actors[k].act(this);
     }
 };
 
@@ -69,6 +116,7 @@ CanvasInteractor.prototype.draw = function () {
 
     //Lets blend the particle with the BG
 	this.ctx.globalCompositeOperation = "lighter";
+
     this.particleSystem.particles.forEach(function (particle) {
         this.ctx.beginPath();
         var gradient = this.ctx.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius);
@@ -82,6 +130,9 @@ CanvasInteractor.prototype.draw = function () {
         this.ctx.fill();
     }.bind(this));
 
+    this.particleSystem.actors.forEach(function (actor) {
+        actor.draw(this.ctx);
+    }.bind(this))
 };
 
 CanvasInteractor.prototype.update = function () {
