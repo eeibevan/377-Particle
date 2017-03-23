@@ -67,17 +67,22 @@ function ProduceActor(x, y, radius, color) {
 
 ProduceActor.prototype.act = function (system) {
     if (++this.createTick === this.createOnTick) {
-        system.particles.push(new Particle(this.x + this.radius, this.y + this.radius, Math.random(), Math.random()));
+        system.particles.push(
+            new Particle(this.x + this.radius*2, this.y + this.radius*2, Math.random(), Math.random())
+        );
         this.createTick = 0;
     }
 };
 
-ProduceActor.prototype.isInBounds = function () {
-    return false;
+ProduceActor.prototype.isInBounds = function (x, y) {
+    var isInX = x > this.x && x < this.x + this.radius * 2;
+    var isInY = y > this.y && y < this.y + this.radius * 2;
+    return isInX && isInY;
 };
 
-ProduceActor.prototype.onContact = function () {
-
+ProduceActor.prototype.onContact = function (particle) {
+    particle.deltaX *= -1;
+    particle.deltaY *= -1;
 };
 
 ProduceActor.prototype.draw = function (ctx) {
