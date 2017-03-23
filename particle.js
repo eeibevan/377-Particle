@@ -41,14 +41,18 @@ NullActor.prototype.isInBounds = function (x, y) {
 
 NullActor.prototype.onContact = function (particle) {
     // TODO: Figure Out How To Make Bouncing Off Realistic
-    var cenX = this.x + this.width/2;
-    var cenY = this.y + this.width/2;
+    var lowX = this.x - this.width;
+    var highX = this.x;
+    var leftY = this.y;
+    var rightY = this.y + this.width;
 
-    var deltaCenx = particle.x - cenX;
-    var deltaCenY = particle.y - cenY;
+    var oldPosX = particle.x - particle.deltaX;
+    var oldPosY = particle.y - particle.deltaY;
 
-    particle.deltaY = -particle.deltaY;
-    particle.deltaX = -particle.deltaX;
+    if (oldPosX < lowX || oldPosX > highX)
+        particle.deltaX *= -1;
+    if (oldPosY < leftY || oldPosY > rightY)
+        particle.deltaY *= -1;
 };
 
 NullActor.prototype.draw = function (ctx) {
