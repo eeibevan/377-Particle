@@ -67,7 +67,7 @@ function ProduceActor(x, y, radius, color) {
 
 ProduceActor.prototype.act = function (system) {
     if (++this.createTick === this.createOnTick) {
-        system.particles.push(new Particle(this.x + this.radius, this.y + this.radius, 1, 1));
+        system.particles.push(new Particle(this.x + this.radius, this.y + this.radius, Math.random(), Math.random()));
         this.createTick = 0;
     }
 };
