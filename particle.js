@@ -27,14 +27,15 @@ function ParticleSystem(n, xBound, yBound) {
     this.actors = [];
     this.xBound = xBound;
     this.yBound = yBound;
+    this.actorFactor = new ActorFactory();
     this.seed(n)
 }
 
 ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
         this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
-    this.actors.push(new NullActor(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
-    this.actors.push(new ProduceActor(100, 200, 5, 200, 'green'));
+    this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
+    this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
 };
 
 ParticleSystem.prototype.update = function () {

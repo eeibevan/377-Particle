@@ -36,3 +36,7 @@ NullActor.prototype.draw = function (ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.width);
 };
+
+ActorFactory.prototype.makeNull = function (x, y, width, color) {
+    return new NullActor(x, y, width, color);
+};

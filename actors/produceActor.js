@@ -34,3 +34,7 @@ ProduceActor.prototype.draw = function (ctx) {
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
     ctx.fill();
 };
+
+ActorFactory.prototype.makeProducer = function (x, y, radius, ticksPerCreation, color) {
+    return new ProduceActor(x, y, radius, ticksPerCreation, color);
+};
