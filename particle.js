@@ -20,6 +20,7 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.deltaY = deltaY || 0;
     this.radius = radius || Math.floor(Math.random() * 20);
     this.color = color || randomRgbColor();
+    this.isToDie = false;
 }
 
 Particle.prototype.draw = function (ctx) {
@@ -41,6 +42,7 @@ function ParticleSystem(n, xBound, yBound) {
     this.xBound = xBound;
     this.yBound = yBound;
     this.actorFactor = new ActorFactory();
+    this.spliceParticles = false;
     this.seed(n)
 }
 
@@ -67,10 +69,25 @@ ParticleSystem.prototype.update = function () {
             par.deltaX = -par.deltaX;
         if (par.y > this.yBound || par.y < 0)
             par.deltaY = -par.deltaY;
+
+        if (par.isToDie) {
+            delete this.particles[i];
+            this.spliceParticles = true;
+        }
     }
 
-    for (var k = 0; k < this.actors.length; k++) {
-        this.actors[k].act(this);
+    if (this.spliceParticles) {
+        for (var k = 0; k < this.particles.length; k++) {
+            if (this.particles[i] === undefined) {
+                this.particles.splice(k, 1);
+                k--;
+            }
+        }
+        this.spliceParticles = false;
+    }
+
+    for (var l = 0; l < this.actors.length; l++) {
+        this.actors[l].act(this);
     }
 };
 
