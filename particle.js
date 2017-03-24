@@ -61,18 +61,18 @@ NullActor.prototype.draw = function (ctx) {
     ctx.fillRect(this.x, this.y, this.width, this.width);
 };
 
-function ProduceActor(x, y, radius, color) {
+function ProduceActor(x, y, radius, ticksPerCreation, color) {
     this.x = x;
     this.y = y;
     this.radius = radius;
     this.color = color || randomRgbColor();
 
-    this.createOnTick = 20;
+    this.ticksPerCreation = ticksPerCreation;
     this.createTick = 0;
 }
 
 ProduceActor.prototype.act = function (system) {
-    if (++this.createTick === this.createOnTick) {
+    if (++this.createTick === this.ticksPerCreation) {
         system.particles.push(
             new Particle(this.x + this.radius*2, this.y + this.radius*2, Math.random(), Math.random())
         );
