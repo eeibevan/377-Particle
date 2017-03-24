@@ -1,7 +1,7 @@
-function KillActor(x, y, length, color) {
+function KillActor(x, y, width, color) {
     this.x = x;
     this.y = y;
-    this.length = length;
+    this.width = width;
     this.color = color || randomRgbColor();
 }
 
@@ -10,8 +10,8 @@ KillActor.prototype.act = function (system) {
 };
 
 KillActor.prototype.isInBounds = function (x, y) {
-    var isInX = x > this.x && x < this.x + this.length;
-    var isInY = y > this.y && y < this.y + this.length;
+    var isInX = x > this.x && x < this.x + this.width;
+    var isInY = y > this.y && y < this.y + this.width;
     return isInX && isInY;
 };
 
@@ -25,6 +25,6 @@ KillActor.prototype.draw = function (ctx) {
     ctx.fillRect(this.x, this.y, this.width, this.width)
 };
 
-ActorFactory.prototype.makeKill = function (x, y, length, color) {
-    return new KillActor(x, y, length, color);
+ActorFactory.prototype.makeKill = function (x, y, width, color) {
+    return new KillActor(x, y, width, color);
 };
