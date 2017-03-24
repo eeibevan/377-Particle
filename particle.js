@@ -51,6 +51,7 @@ ParticleSystem.prototype.seed = function (n) {
         this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
     this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
     this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
+    this.actors.push(this.actorFactor.makeKill(400, 500, 20, 'white'));
 };
 
 ParticleSystem.prototype.update = function () {
@@ -78,7 +79,7 @@ ParticleSystem.prototype.update = function () {
 
     if (this.spliceParticles) {
         for (var k = 0; k < this.particles.length; k++) {
-            if (this.particles[i] === undefined) {
+            if (this.particles[k] === undefined) {
                 this.particles.splice(k, 1);
                 k--;
             }
