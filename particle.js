@@ -55,6 +55,12 @@ NullActor.prototype.onContact = function (particle) {
         particle.deltaY *= -1;
 };
 
+NullActor.prototype.draw = function (ctx) {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.width);
+};
+
 function ProduceActor(x, y, radius, color) {
     this.x = x;
     this.y = y;
@@ -90,12 +96,6 @@ ProduceActor.prototype.draw = function (ctx) {
     ctx.fillStyle = this.color;
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
     ctx.fill();
-};
-
-NullActor.prototype.draw = function (ctx) {
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.width);
 };
 
 function ParticleSystem(n, xBound, yBound) {
