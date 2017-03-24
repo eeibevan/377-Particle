@@ -110,7 +110,7 @@ ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
         this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
     this.actors.push(new NullActor(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
-    this.actors.push(new ProduceActor(20, 20, 5, 'green'));
+    this.actors.push(new ProduceActor(100, 200, 5, 200, 'green'));
 };
 
 ParticleSystem.prototype.update = function () {
