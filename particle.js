@@ -22,6 +22,19 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.color = color || randomRgbColor();
 }
 
+Particle.prototype.draw = function (ctx) {
+    var gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+    gradient.addColorStop(0, "white");
+    gradient.addColorStop(0.4, "white");
+    gradient.addColorStop(0.4, this.color);
+    gradient.addColorStop(1, "black");
+
+    ctx.beginPath();
+    ctx.fillStyle = gradient;
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
+    ctx.fill();
+};
+
 function ParticleSystem(n, xBound, yBound) {
     this.particles = [];
     this.actors = [];
@@ -85,16 +98,7 @@ CanvasInteractor.prototype.draw = function () {
 	this.ctx.globalCompositeOperation = "lighter";
 
     this.particleSystem.particles.forEach(function (particle) {
-        this.ctx.beginPath();
-        var gradient = this.ctx.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius);
-        gradient.addColorStop(0, "white");
-        gradient.addColorStop(0.4, "white");
-        gradient.addColorStop(0.4, particle.color);
-        gradient.addColorStop(1, "black");
-
-        this.ctx.fillStyle = gradient;
-        this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI*2, false);
-        this.ctx.fill();
+        particle.draw(this.ctx);
     }.bind(this));
 
     this.particleSystem.actors.forEach(function (actor) {
