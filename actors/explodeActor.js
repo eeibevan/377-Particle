@@ -1,19 +1,27 @@
-function ExplodeActor(x, y, width, explodeTicks, color) {
+function ExplodeActor(x, y, width, explodeTicks, isFuseLit, color) {
     this.x = x;
     this.y = y;
     this.width = width;
-    this.explodeTicks = explodeTicks;
+    this.explodeTicks = explodeTicks || 50;
+    this._isFuseLit = isFuseLit || false;
     this.color = color || randomRgbColor();
 }
 
 ExplodeActor.prototype.explode = function (system) {
-    //TODO: Implement
+    var particles = system.particles;
+    var distance = 0;
+    for (var i = 0; i < particles.length; i++) {
+        var particle = particles[i];
+        distance = Math.sqrt((this.x - particle.x) + (this.y - particle.y));
+        if (distance < 100)
+            particle.isToDie = true;
+    }
 };
 
 ExplodeActor.prototype.act = function (system) {
-    if (--this.explodeTicks <= 0) {
-        this.explode(system);
-    }
+    if (this._isFuseLit)
+        if (--this.explodeTicks <= 0)
+            this.explode(system);
 };
 
 ExplodeActor.prototype.isInBounds = function (x, y) {
@@ -23,7 +31,7 @@ ExplodeActor.prototype.isInBounds = function (x, y) {
 };
 
 ExplodeActor.prototype.onContact = function (particle) {
-    // Nothing On Contact
+    this._isFuseLit = true;
 };
 
 ExplodeActor.prototype.draw = function (ctx) {
