@@ -5,6 +5,14 @@ function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
     this.color = color || randomRgbColor();
     this.explodeTicks = explodeTicks || 50;
     this._isFuseLit = isFuseLit || false;
+    this._playExplodeAnimation = false;
+    this.explosion = {
+        width: width,
+        growth: 17,
+        frames: 10,
+        color: 'white'
+    };
+    this.isToDie = false;
 }
 
 ExplodeActor.prototype.explode = function (system) {
@@ -12,7 +20,9 @@ ExplodeActor.prototype.explode = function (system) {
     var distance = 0;
     for (var i = 0; i < particles.length; i++) {
         var particle = particles[i];
-        distance = Math.sqrt((this.x - particle.x) + (this.y - particle.y));
+        var dx = this.x - particle.x;
+        var dy = this.y - particle.y;
+        distance = Math.sqrt( dx * dx + dy * dy);
         if (distance < 100)
             particle.isToDie = true;
     }
@@ -20,8 +30,11 @@ ExplodeActor.prototype.explode = function (system) {
 
 ExplodeActor.prototype.act = function (system) {
     if (this._isFuseLit)
-        if (--this.explodeTicks <= 0)
+        if (--this.explodeTicks <= 0) {
             this.explode(system);
+            this._isFuseLit = false;
+            this._playExplodeAnimation = true;
+        }
 };
 
 ExplodeActor.prototype.isInBounds = function (x, y) {
@@ -37,7 +50,33 @@ ExplodeActor.prototype.onContact = function (particle) {
 ExplodeActor.prototype.draw = function (ctx) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.width)
+    ctx.fillRect(this.x, this.y, this.width, this.width);
+
+    if (this._playExplodeAnimation && this.explosion.frames > 0) {
+        this.drawExplosionFrame(ctx);
+        this.explosion.width += this.explosion.growth;
+        this.explosion.frames--;
+    }
+
+    if (this.explosion.frames < 1) {
+        this._playExplodeAnimation = false;
+        this.isToDie = true;
+    }
+};
+
+ExplodeActor.prototype.drawExplosionFrame = function (ctx) {
+    ctx.beginPath();
+    ctx.globalCompositeOperation = "lighter";
+
+    var gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.explosion.width);
+    gradient.addColorStop(0, "white");
+    gradient.addColorStop(0.4, "white");
+    gradient.addColorStop(0.4, this.explosion.color);
+    gradient.addColorStop(1, "black");
+
+    ctx.fillStyle = gradient;
+    ctx.arc(this.x, this.y, this.explosion.width, 0, Math.PI*2, false);
+    ctx.fill();
 };
 
 ActorFactory.prototype.makeExplode = function (x, y, width, color, explodeTicks, isFuseLit) {

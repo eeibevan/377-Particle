@@ -49,12 +49,14 @@ function ParticleSystem(n, xBound, yBound) {
 ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
         this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
-    this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
-    this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
-    this.actors.push(this.actorFactor.makeKill(400, 500, 20, 'white'));
+    this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
+    //this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
+    //this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
+    //this.actors.push(this.actorFactor.makeKill(400, 500, 20, 'white'));
 };
 
 ParticleSystem.prototype.update = function () {
+    var spliceActors = false;
     for (var i = 0; i < this.particles.length; i++) {
         var par = this.particles[i];
         par.x += par.deltaX;
@@ -89,6 +91,19 @@ ParticleSystem.prototype.update = function () {
 
     for (var l = 0; l < this.actors.length; l++) {
         this.actors[l].act(this);
+        if (this.actors[l].hasOwnProperty('isToDie') && this.actors[l].isToDie) {
+            delete this.actors[l];
+            spliceActors = true;
+        }
+    }
+
+    if (spliceActors) {
+        for (var m = 0; m < this.actors.length; m++) {
+            if (this.actors[m] === undefined) {
+                this.actors.splice(m, 1);
+                m--;
+            }
+        }
     }
 };
 
