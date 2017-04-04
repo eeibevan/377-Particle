@@ -1,10 +1,10 @@
-function ExplodeActor(x, y, width, explodeTicks, isFuseLit, color) {
+function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
     this.x = x;
     this.y = y;
     this.width = width;
+    this.color = color || randomRgbColor();
     this.explodeTicks = explodeTicks || 50;
     this._isFuseLit = isFuseLit || false;
-    this.color = color || randomRgbColor();
 }
 
 ExplodeActor.prototype.explode = function (system) {
@@ -40,6 +40,6 @@ ExplodeActor.prototype.draw = function (ctx) {
     ctx.fillRect(this.x, this.y, this.width, this.width)
 };
 
-ActorFactory.prototype.makeExplode = function (x, y, width, color) {
-    return new ExplodeActor(x, y, width, color);
+ActorFactory.prototype.makeExplode = function (x, y, width, color, explodeTicks, isFuseLit) {
+    return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit);
 };
