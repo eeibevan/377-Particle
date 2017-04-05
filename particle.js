@@ -24,12 +24,30 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.deltaY = deltaY || 0;
     this.radius = radius || Math.floor(Math.random() * 20);
     this.color = color || randomRgbColor();
+    this.invulnerabilityTicks = 500;
+    this.isToBurst = false;
+    this.burstRadius = 50;
     this.isToDie = false;
 }
 
+Particle.prototype.isInvulnerable = function () {
+    return this.invulnerabilityTicks > 0;
+};
+
+Particle.prototype.tick = function () {
+    if (this.invulnerabilityTicks > 0)
+        this.invulnerabilityTicks--;
+};
+
 Particle.prototype.absorb = function (particle) {
-    // Only Absorb Part of The Other Particle
+    // Don't Absorb Invulnerable Particles
+    if (particle.isInvulnerable())
+        return;
+
     this.radius += particle.radius;
+
+    if (this.radius > this.burstRadius)
+        this.isToBurst = true;
 
     particle.isToDie = true;
 };
@@ -109,6 +127,8 @@ ParticleSystem.prototype.update = function () {
 
         if (par.isToDie) {
             spliceParticles = true;
+        } else {
+            par.tick();
         }
     }
 
@@ -122,11 +142,14 @@ ParticleSystem.prototype.update = function () {
             continue;
 
         var nextIndex = l + 1;
-        while (nextIndex < this.particles.length && this.particles[nextIndex].x < part.x + part.radius) {
+        while (nextIndex < this.particles.length &&
+                this.particles[nextIndex].x - this.particles[nextIndex].radius < part.x + part.radius) {
             var nextP = this.particles[nextIndex];
             if (!nextP.isToDie) {
                 if (part.isInBounds(nextP.x, nextP.y)) {
                     part.absorb(nextP);
+                    if (part.isToBurst)
+                        spliceParticles = true;
                 }
             }
             nextIndex++;
@@ -135,6 +158,17 @@ ParticleSystem.prototype.update = function () {
 
     if (spliceParticles) {
         for (var k = 0; k < this.particles.length; k++) {
+            if (this.particles[k].isToBurst) {
+                var newPars = Math.floor(this.particles[k].radius/10);
+                for (; newPars > 0; newPars--) {
+                    this.particles.push(
+                        new Particle(
+                            this.particles[k].x, this.particles[k].y,
+                            randomRange(-2,2), randomRange(-2,2))
+                    );
+                }
+                this.particles[k].isToDie = true;
+            }
             if (this.particles[k].isToDie) {
                 this.particles.splice(k, 1);
                 k--;
