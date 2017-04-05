@@ -27,6 +27,20 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.isToDie = false;
 }
 
+Particle.prototype.absorb = function (particle) {
+    // Only Absorb Part of The Other Particle
+    this.radius += particle.radius;
+
+    particle.isToDie = true;
+};
+
+Particle.prototype.isInBounds = function (x, y) {
+    var dx = this.x - x;
+    var dy = this.y - y;
+    var distance = Math.sqrt(dx*dx + dy*dy);
+    return distance <= this.radius;
+};
+
 Particle.prototype.draw = function (ctx) {
     var gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
     gradient.addColorStop(0, "white");
@@ -58,10 +72,20 @@ ParticleSystem.prototype.seed = function (n) {
                 randomRange(-10, 10)
             ));
 
-    this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20));
+    //this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20));
     //this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
     //this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
     //this.actors.push(this.actorFactor.makeKill(400, 500, 20, 'white'));
+};
+
+ParticleSystem.prototype._sortX = function () {
+    for (var i = 0; i < this.particles.length; i++) {
+        var tmp = this.particles[i];
+        for (var j = i - 1; j >= 0 && (this.particles[j].x > tmp.x); j--) {
+            this.particles[j + 1] = this.particles[j];
+        }
+        this.particles[j + 1] = tmp;
+    }
 };
 
 ParticleSystem.prototype.update = function () {
@@ -84,33 +108,53 @@ ParticleSystem.prototype.update = function () {
             par.deltaY = -par.deltaY;
 
         if (par.isToDie) {
-            delete this.particles[i];
             spliceParticles = true;
+        }
+    }
+
+
+    this._sortX();
+    for (var l = 0; l < this.particles.length; l++) {
+        var part = this.particles[l];
+
+        // Skip Detection For Dead Particles
+        if (part.isToDie)
+            continue;
+
+        var nextIndex = l + 1;
+        while (nextIndex < this.particles.length && this.particles[nextIndex].x < part.x + part.radius) {
+            var nextP = this.particles[nextIndex];
+            if (!nextP.isToDie) {
+                if (part.isInBounds(nextP.x, nextP.y)) {
+                    part.absorb(nextP);
+                }
+            }
+            nextIndex++;
         }
     }
 
     if (spliceParticles) {
         for (var k = 0; k < this.particles.length; k++) {
-            if (this.particles[k] === undefined) {
+            if (this.particles[k].isToDie) {
                 this.particles.splice(k, 1);
                 k--;
             }
         }
     }
 
-    for (var l = 0; l < this.actors.length; l++) {
-        this.actors[l].act(this);
-        if (this.actors[l].hasOwnProperty('isToDie') && this.actors[l].isToDie) {
-            delete this.actors[l];
+    for (var m = 0; m < this.actors.length; m++) {
+        this.actors[m].act(this);
+        if (this.actors[m].hasOwnProperty('isToDie') && this.actors[m].isToDie) {
+            delete this.actors[m];
             spliceActors = true;
         }
     }
 
     if (spliceActors) {
-        for (var m = 0; m < this.actors.length; m++) {
-            if (this.actors[m] === undefined) {
-                this.actors.splice(m, 1);
-                m--;
+        for (var n = 0; n < this.actors.length; n++) {
+            if (this.actors[n] === undefined) {
+                this.actors.splice(n, 1);
+                n--;
             }
         }
     }
