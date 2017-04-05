@@ -49,7 +49,7 @@ function ParticleSystem(n, xBound, yBound) {
 ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
         this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
-    this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
+    this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20));
     //this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
     //this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
     //this.actors.push(this.actorFactor.makeKill(400, 500, 20, 'white'));
