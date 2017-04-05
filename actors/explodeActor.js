@@ -2,10 +2,11 @@ function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
     this.x = x;
     this.y = y;
     this.width = width;
-    this.color = color || randomRgbColor();
+    this.color = color || 'red';
     this.explodeTicks = explodeTicks || 50;
     this._isFuseLit = isFuseLit || false;
     this._playExplodeAnimation = false;
+    this._flash = false;
     this.explosion = {
         width: width,
         growth: 17,
@@ -50,6 +51,16 @@ ExplodeActor.prototype.onContact = function (particle) {
 ExplodeActor.prototype.draw = function (ctx) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
+
+    // Alternate Flashing If Fuse Is Lit
+    if (this._isFuseLit) {
+        if (this._flash) {
+            ctx.fillStyle = 'white';
+            this._flash = false
+        } else
+            this._flash = true;
+    }
+
     ctx.fillRect(this.x, this.y, this.width, this.width);
 
     if (this._playExplodeAnimation && this.explosion.frames > 0) {
