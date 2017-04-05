@@ -68,8 +68,8 @@ ParticleSystem.prototype.seed = function (n) {
         this.particles.push(
             new Particle(randomRange(2, this.xBound),
                 randomRange(2, this.yBound),
-                randomRange(-10, 10),
-                randomRange(-10, 10)
+                randomRange(-2, 2),
+                randomRange(-2, 2)
             ));
 
     //this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20));
