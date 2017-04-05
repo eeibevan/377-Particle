@@ -46,7 +46,6 @@ function ParticleSystem(n, xBound, yBound) {
     this.xBound = xBound;
     this.yBound = yBound;
     this.actorFactor = new ActorFactory();
-    this.spliceParticles = false;
     this.seed(n)
 }
 
@@ -66,6 +65,7 @@ ParticleSystem.prototype.seed = function (n) {
 };
 
 ParticleSystem.prototype.update = function () {
+    var spliceParticles = false;
     var spliceActors = false;
     for (var i = 0; i < this.particles.length; i++) {
         var par = this.particles[i];
@@ -85,18 +85,17 @@ ParticleSystem.prototype.update = function () {
 
         if (par.isToDie) {
             delete this.particles[i];
-            this.spliceParticles = true;
+            spliceParticles = true;
         }
     }
 
-    if (this.spliceParticles) {
+    if (spliceParticles) {
         for (var k = 0; k < this.particles.length; k++) {
             if (this.particles[k] === undefined) {
                 this.particles.splice(k, 1);
                 k--;
             }
         }
-        this.spliceParticles = false;
     }
 
     for (var l = 0; l < this.actors.length; l++) {
