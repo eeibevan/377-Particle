@@ -13,6 +13,10 @@ function randomRgbColor() {
     return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 }
 
+function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 function Particle(x, y, deltaX, deltaY, radius, color) {
     this.x = x || 0;
     this.y = y || 0 ;
@@ -48,7 +52,13 @@ function ParticleSystem(n, xBound, yBound) {
 
 ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
-        this.particles.push(new Particle(1, 1, Math.random(), Math.random()));
+        this.particles.push(
+            new Particle(randomRange(2, this.xBound),
+                randomRange(2, this.yBound),
+                randomRange(-10, 10),
+                randomRange(-10, 10)
+            ));
+
     this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20));
     //this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
     //this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
@@ -111,7 +121,7 @@ function CanvasInteractor(canvas, particleSystem) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
-    this.particleSystem = particleSystem || new ParticleSystem(50, canvas.width, canvas.height);
+    this.particleSystem = particleSystem || new ParticleSystem(200, canvas.width, canvas.height);
 
     window.requestAnimationFrame(this.startUpdates.bind(this))
 }
