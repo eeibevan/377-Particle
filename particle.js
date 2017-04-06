@@ -24,7 +24,7 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.deltaY = deltaY || 0;
     this.radius = radius || Math.floor(Math.random() * 20);
     this.color = color || randomRgbColor();
-    this.invulnerabilityTicks = 500;
+    this.invulnerabilityTicks = 30;
     this.isToBurst = false;
     this.burstRadius = 50;
     this.isToDie = false;
@@ -42,6 +42,10 @@ Particle.prototype.tick = function () {
 Particle.prototype.absorb = function (particle) {
     // Don't Absorb Invulnerable Particles
     if (particle.isInvulnerable())
+        return;
+
+    // Don't Absorb Any More It We're About To Burst
+    if (this.isToBurst)
         return;
 
     this.radius += particle.radius;
@@ -84,7 +88,7 @@ function ParticleSystem(n, xBound, yBound) {
 ParticleSystem.prototype.seed = function (n) {
     for (var i = 0; i < n; i++)
         this.particles.push(
-            new Particle(randomRange(2, this.xBound),
+            new Particle(randomRange(10, this.xBound),
                 randomRange(2, this.yBound),
                 randomRange(-2, 2),
                 randomRange(-2, 2)
@@ -120,10 +124,17 @@ ParticleSystem.prototype.update = function () {
             }
         }
 
-        if (par.x > this.xBound || par.x < 0)
+
+        // Reset x and y to 0 When Out of Bounds
+        // So They Get Stuck Out of Bounds
+        if (par.x > this.xBound || par.x < 0) {
             par.deltaX = -par.deltaX;
-        if (par.y > this.yBound || par.y < 0)
+            par.x = 0;
+        }
+        if (par.y > this.yBound || par.y < 0) {
             par.deltaY = -par.deltaY;
+            par.y = 0
+        }
 
         if (par.isToDie) {
             spliceParticles = true;
@@ -198,7 +209,7 @@ function CanvasInteractor(canvas, particleSystem) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
-    this.particleSystem = particleSystem || new ParticleSystem(200, canvas.width, canvas.height);
+    this.particleSystem = particleSystem || new ParticleSystem(1000, canvas.width, canvas.height);
 
     window.requestAnimationFrame(this.startUpdates.bind(this))
 }
