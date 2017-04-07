@@ -132,7 +132,8 @@ ExplodeActor.prototype._drawText = function (ctx) {
     var textHeight = ctx.measureText('E').width;
 
     // Draws Text In The Center of The Actor
-    ctx.fillText(this.text, this.x + textWidth/2, this.y + textHeight*2);
+    // Divide By Three Gives Us Slightly Better Centering
+    ctx.fillText(this.text, this.x + textWidth/3, this.y + textHeight*2);
 
     ctx.globalCompositeOperation = oldCO;
 };

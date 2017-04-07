@@ -197,7 +197,7 @@ ParticleSystem.prototype.update = function () {
 
     if (this.allowRndActors) {
         // Rarely Create Random Explode Actors
-        var rnd = Math.floor(randomRange(1, 500));
+        var rnd = Math.floor(randomRange(1, 750));
         if (rnd === 15) {
             this.actors.push(this.actorFactor.makeExplode(randomRange(30, this.xBound-50), randomRange(30, this.yBound-50) , 40));
         }
