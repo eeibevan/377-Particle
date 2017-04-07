@@ -21,6 +21,9 @@ function KillActor(x, y, width, color) {
     this.y = y;
     this.width = width;
     this.color = color || 'yellow';
+    this.particlesKilled = 0;
+    this.maxKills = 50;
+    this.isToNull = false;
     this.text  = 'Ki';
     this.textColor = 'black';
     this.fontFamily = "Consolas";
@@ -62,8 +65,12 @@ KillActor.prototype.isInBounds = function (x, y) {
  * The Particle To Flag For Death
  */
 KillActor.prototype.onContact = function (particle) {
-    if (!particle.isInvulnerable())
-        particle.isToDie = true;
+    if (particle.isInvulnerable() || this.isToNull)
+        return;
+
+    particle.isToDie = true;
+    if (++this.particlesKilled >= this.maxKills)
+        this.isToNull = true;
 };
 
 /**

@@ -189,6 +189,9 @@ ParticleSystem.prototype.update = function () {
         if (this.actors[m].hasOwnProperty('isToDie') && this.actors[m].isToDie) {
             this.actors.splice(m, 1);
             m--;
+        } else if(this.actors[m].hasOwnProperty('isToNull') && this.actors[m].isToNull) {
+            var tmp = this.actors[m];
+            this.actors[m] = this.actorFactor.makeNull(tmp.x, tmp.y, tmp.width)
         }
     }
 
