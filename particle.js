@@ -142,16 +142,19 @@ ParticleSystem.prototype.update = function () {
         }
 
 
-        // Reset x and y to 0 When Out of Bounds
-        // So They Get Stuck Out of Bounds
-        if (par.x > this.xBound || par.x < 0) {
-            par.deltaX = -par.deltaX;
+
+        // Have Particles 'Wrap Around' The Canvas If They Go Off The Edge
+        // + or - The Radius So The Particle Goes Completely Off Screen Before
+        //  Wrapping
+        if (par.x > this.xBound + par.radius )
             par.x = 0;
-        }
-        if (par.y > this.yBound || par.y < 0) {
-            par.deltaY = -par.deltaY;
-            par.y = 0
-        }
+        else if (par.x < 0 - par.radius)
+            par.x = this.xBound;
+
+        if (par.y > this.yBound + par.radius)
+            par.y = 0;
+        else if (par.y < 0 - par.radius)
+            par.y = this.yBound;
 
         if (par.isToDie) {
             spliceParticles = true;
