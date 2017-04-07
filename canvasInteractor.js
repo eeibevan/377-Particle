@@ -2,7 +2,7 @@ function CanvasInteractor(canvas, particleSystem) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
-    this.particleSystem = particleSystem || new ParticleSystem(0, canvas.width, canvas.height);
+    this.particleSystem = particleSystem || new ParticleSystem(canvas.width, canvas.height, 500);
 
     window.requestAnimationFrame(this.startUpdates.bind(this))
 }
@@ -18,7 +18,6 @@ CanvasInteractor.prototype.draw = function () {
     this.ctx.fillStyle = 'black';
     this.ctx.fillRect(0,0, this.canvas.width, this.canvas.height);
 
-    //Lets blend the particle with the BG
     this.ctx.globalCompositeOperation = "lighter";
 
     this.particleSystem.particles.forEach(function (particle) {

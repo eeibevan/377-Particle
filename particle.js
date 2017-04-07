@@ -1,9 +1,41 @@
+/**
+ * Basic Unit of The Particle System
+ * Moves About And Interacts With Actors
+ *
+ * @param [x] {number}
+ * @default 0
+ * The X Location of The Particle In The System
+ *
+ * @param [y] {number}
+ * @default 0
+ * The Y Location of The Particle In The System
+ *
+ * @param [deltaX] {number}
+ * @default 0
+ * The Change In x For Every Particle System Update
+ * Positive & Negative Implies Direction
+ *
+ * @param [deltaY] {number}
+ * @default 0
+ * The Change In y For Every Particle System Update
+ * Positive & Negative Implies Direction
+ *
+ * @param [radius] {number}
+ * @default Random Int Between 1 And 20
+ * Width/Height of The Particle
+ *
+ * @param [color] {String}
+ * @default Random RGB Color
+ * The CSS Color of The Particle
+ *
+ * @constructor
+ */
 function Particle(x, y, deltaX, deltaY, radius, color) {
     this.x = x || 0;
     this.y = y || 0 ;
     this.deltaX = deltaX || 0;
     this.deltaY = deltaY || 0;
-    this.radius = radius || Math.floor(Math.random() * 20);
+    this.radius = radius || Math.ceil(Math.random() * 20);
     this.color = color || randomRgbColor();
     this.invulnerabilityTicks = 30;
     this.isToBurst = false;
@@ -11,15 +43,41 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.isToDie = false;
 }
 
+/**
+ * Tests If The Particle Should Be Allowed To Die
+ * @returns {boolean}
+ * If Actors Should Not Kill This Particle (true).
+ * False otherwise
+ */
 Particle.prototype.isInvulnerable = function () {
     return this.invulnerabilityTicks > 0;
 };
 
+/**
+ * Advances Particle State (Not Movement)
+ */
 Particle.prototype.tick = function () {
     if (this.invulnerabilityTicks > 0)
         this.invulnerabilityTicks--;
 };
 
+/**
+ * Attempts To Absorb Another Particle(particle)
+ * If The Other Particle Is Invulnerable It Will
+ * Not Be Absorbed. <br />
+ *
+ * If This Particle Absorbs Too Many Particles And
+ * Its width Exceeds burstRadius, Then It Will Be Flagged To Burst
+ * And Cannot Absorb Any More Particles
+ *
+ * The Absorbed Particle (If We Pass All of The Above Tests)
+ * Will Be Flagged To Die And This Particle's width
+ * Will Be Grown By particle 's Width
+ *
+ * @param particle {Particle}
+ * The Particle To Attempt To Absorb
+ * May Be Marked For Death By This Method
+ */
 Particle.prototype.absorb = function (particle) {
     // Don't Absorb Invulnerable Particles
     if (particle.isInvulnerable())
@@ -37,6 +95,18 @@ Particle.prototype.absorb = function (particle) {
     particle.isToDie = true;
 };
 
+/**
+ * Tests If A Point Is Within This Particle
+ *
+ * @param x {number}
+ * The X Location In The System
+ *
+ * @param y {number}
+ * The Y Location In The System
+ *
+ * @returns {boolean}
+ * If (x,y) Is Inside This Particle
+ */
 Particle.prototype.isInBounds = function (x, y) {
     var dx = this.x - x;
     var dy = this.y - y;
@@ -44,6 +114,15 @@ Particle.prototype.isInBounds = function (x, y) {
     return distance <= this.radius;
 };
 
+/**
+ * Draws This Particle
+ *
+ * @param ctx {CanvasRenderingContext2D}
+ * The Context To Draw The Particle On
+ * Best Results Are Achieved By
+ * globalCompositeOperation = "lighter"
+ * For Particles
+ */
 Particle.prototype.draw = function (ctx) {
     var gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
     gradient.addColorStop(0, "white");

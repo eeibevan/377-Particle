@@ -1,3 +1,29 @@
+/**
+ * An Actor That Explodes On Contact
+ *
+ * @param x {number}
+ * The X Location of The Actor In The System
+ *
+ * @param y {number}
+ * The Y Location of The Actor In The System
+ *
+ * @param width {number}
+ * Width/Height of The Actor
+ *
+ * @param [color] {string}
+ * @default 'red'
+ * The Color of The Actor
+ *
+ * @param [explodeTicks] {number}
+ * @default 50
+ * Number of act() Calls Required To Explode The Actor After Contact
+ *
+ * @param [isFuseLit] {boolean}
+ * @default false
+ * Flag To Create The Actor Ticking Down To Explosion of Not
+ *
+ * @constructor
+ */
 function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
     this.x = x;
     this.y = y;
@@ -19,6 +45,13 @@ function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
     this.fontFamily = "Consolas";
 }
 
+/**
+ * Kills All Non-Invulnerable Particles
+ * In Range of The Explosion Animation
+ *
+ * @param system {ParticleSystem}
+ * The System To Kill The Particles In
+ */
 ExplodeActor.prototype.explode = function (system) {
     var particles = system.particles;
     var distance = 0;
@@ -27,11 +60,18 @@ ExplodeActor.prototype.explode = function (system) {
         var dx = this.x - particle.x;
         var dy = this.y - particle.y;
         distance = Math.sqrt( dx * dx + dy * dy);
-        if (distance < 100)
+        if (distance < this.explosion.growth * this.explosion.frames && !particle.isInvulnerable())
             particle.isToDie = true;
     }
 };
 
+/**
+ * If The Fuse Is Lit, Ticks Down To Explosion
+ * Otherwise, Does Nothing
+ *
+ * @param system
+ * The System To Perform The Explosion In (If At All)
+ */
 ExplodeActor.prototype.act = function (system) {
     if (this._isFuseLit)
         if (--this.explodeTicks <= 0) {
@@ -41,16 +81,42 @@ ExplodeActor.prototype.act = function (system) {
         }
 };
 
+/**
+ * Tests If A Point Is Within This Actor
+ *
+ * @param x {number}
+ * The X Location In The System
+ *
+ * @param y {number}
+ * The Y Location In The System
+ *
+ * @returns {boolean}
+ * If (x,y) Is Inside This Actor
+ */
 ExplodeActor.prototype.isInBounds = function (x, y) {
     var isInX = x > this.x && x < this.x + this.width;
     var isInY = y > this.y && y < this.y + this.width;
     return isInX && isInY;
 };
 
+/**
+ * Ignites The Fuse On Contact
+ *
+ * @param particle {Particle}
+ * The Particle That Made Contact
+ */
 ExplodeActor.prototype.onContact = function (particle) {
     this._isFuseLit = true;
 };
 
+/**
+ * Draws The Text In The Center of The Actor
+ *
+ * @param ctx {CanvasRenderingContext2D}
+ * The Context The Actor Is In
+ *
+ * @private
+ */
 ExplodeActor.prototype._drawText = function (ctx) {
     // Save Composite Operation To Restore Later
     var oldCO = ctx.globalCompositeOperation;
@@ -69,6 +135,13 @@ ExplodeActor.prototype._drawText = function (ctx) {
     ctx.globalCompositeOperation = oldCO;
 };
 
+/**
+ * Draws This Actor &
+ * Plays Explosion Animation When Relevant
+ *
+ * @param ctx {CanvasRenderingContext2D}
+ * The Context To Draw The Actor On
+ */
 ExplodeActor.prototype.draw = function (ctx) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
@@ -97,8 +170,16 @@ ExplodeActor.prototype.draw = function (ctx) {
     }
 };
 
+/**
+ * Draws The Current Explosion State
+ *
+ * @param ctx {CanvasRenderingContext2D}
+ * The Context To Draw The Explosion On
+ */
 ExplodeActor.prototype.drawExplosionFrame = function (ctx) {
     ctx.beginPath();
+    // Save Composite Operation To Restore Later
+    var oldCO = ctx.globalCompositeOperation;
     ctx.globalCompositeOperation = "lighter";
 
     var gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.explosion.width);
@@ -110,8 +191,36 @@ ExplodeActor.prototype.drawExplosionFrame = function (ctx) {
     ctx.fillStyle = gradient;
     ctx.arc(this.x, this.y, this.explosion.width, 0, Math.PI*2, false);
     ctx.fill();
+
+    ctx.globalCompositeOperation = oldCO;
 };
 
+/**
+ * Creates An Explosion Actor
+ *
+ * @param x {number}
+ * The X Location of The Actor In The System
+ *
+ * @param y {number}
+ * The Y Location of The Actor In The System
+ *
+ * @param width {number}
+ * Width/Height of The Actor
+ *
+ * @param [color] {string}
+ * @default 'red'
+ * The Color of The Actor
+ *
+ * @param [explodeTicks] {number}
+ * @default 50
+ * Number of act() Calls Required To Explode The Actor After Contact
+ *
+ * @param [isFuseLit] {boolean}
+ * @default false
+ * Flag To Create The Actor Ticking Down To Explosion of Not
+ *
+ * @returns {ExplodeActor}
+ */
 ActorFactory.prototype.makeExplode = function (x, y, width, color, explodeTicks, isFuseLit) {
     return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit);
 };

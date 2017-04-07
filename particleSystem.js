@@ -1,10 +1,30 @@
-function ParticleSystem(n, xBound, yBound) {
+/**
+ * A System For Simulating PArticle Movement And
+ * Actor Interaction
+ *
+ * @param xBound {number}
+ * The X Boundary of The System
+ *
+ * @param yBound {number}
+ * The Y Boundary of The System
+ *
+ * @param [n] {number}
+ * @default 0
+ * Number of Particles To Seed The System With
+ *
+ * @param [numActors] {number}
+ * @default 10
+ * Number of Random Actors To Seed The System With
+ *
+ * @constructor
+ */
+function ParticleSystem(xBound, yBound, n, numActors) {
     this.particles = [];
     this.actors = [];
     this.xBound = xBound;
     this.yBound = yBound;
     this.actorFactor = new ActorFactory();
-    this.seed(n)
+    this.seed(n || 0, numActors || 10)
 }
 
 ParticleSystem.prototype.seed = function (n, actors) {
@@ -16,15 +36,15 @@ ParticleSystem.prototype.seed = function (n, actors) {
                 randomRange(-2, 2)
             ));
 
-    for (var j = actors || 10; j > 0; j--) {
+    for (var j = actors; j > 0; j--) {
         var rnd = Math.floor(Math.random() * 5);
 
         switch (rnd) {
             case 0:
-                this.actors.push(this.actorFactor.makeNull(randomRange(30, this.xBound-30), randomRange(30, this.yBound-30), 20, 'white'));
+                this.actors.push(this.actorFactor.makeNull(randomRange(30, this.xBound-30), randomRange(30, this.yBound-30), 20));
                 break;
             case 1:
-                this.actors.push(this.actorFactor.makeProducer(randomRange(30, this.xBound-35), randomRange(30, this.yBound-35), 25, 200, 'green'));
+                this.actors.push(this.actorFactor.makeProducer(randomRange(30, this.xBound-35), randomRange(30, this.yBound-35), 25, 200));
                 break;
             case 2:
                 this.actors.push(this.actorFactor.makeKill(randomRange(30, this.xBound-40), randomRange(30, this.yBound-40), 30));
@@ -33,12 +53,16 @@ ParticleSystem.prototype.seed = function (n, actors) {
                 this.actors.push(this.actorFactor.makeExplode(randomRange(30, this.xBound-50), randomRange(30, this.yBound-50) , 40));
                 break;
             default:
-                this.actors.push(this.actorFactor.makeNull(randomRange(30, this.xBound-30), randomRange(30, this.yBound-30), 20, 'white'));
+                this.actors.push(this.actorFactor.makeNull(randomRange(30, this.xBound-30), randomRange(30, this.yBound-30), 20));
                 break;
         }
     }
 };
 
+/**
+ * Sorts All Particles By Their X Position
+ * @private
+ */
 ParticleSystem.prototype._sortX = function () {
     for (var i = 0; i < this.particles.length; i++) {
         var tmp = this.particles[i];
@@ -49,6 +73,11 @@ ParticleSystem.prototype._sortX = function () {
     }
 };
 
+/**
+ * Advances The System State
+ * Calculates Particle Movement, Particle Collision,
+ * Particle Bursting, Actors Actions, And Actor/Particle Death
+ */
 ParticleSystem.prototype.update = function () {
     var spliceParticles = false;
     var spliceActors = false;
@@ -84,6 +113,8 @@ ParticleSystem.prototype.update = function () {
     }
 
 
+    // Collision Detection
+    // Achieves Order n In Most Cases
     this._sortX();
     for (var l = 0; l < this.particles.length; l++) {
         var part = this.particles[l];
@@ -92,9 +123,17 @@ ParticleSystem.prototype.update = function () {
         if (part.isToDie)
             continue;
 
+        // Forward Check For Collision On This Particle
+        // Only Forward is Necessary Because, If Collision
+        // Was To Happen On The Left, Then That Particle Would
+        // Detect It
+        //
+        // Only Checks Particles That Are Close Enough
+        // On The X Direction To Collide
         var nextIndex = l + 1;
         while (nextIndex < this.particles.length &&
         this.particles[nextIndex].x - this.particles[nextIndex].radius < part.x + part.radius) {
+
             var nextP = this.particles[nextIndex];
             if (!nextP.isToDie) {
                 if (part.isInBounds(nextP.x, nextP.y)) {
@@ -127,20 +166,14 @@ ParticleSystem.prototype.update = function () {
         }
     }
 
+    // Removes Actors Flagged For Death
     for (var m = 0; m < this.actors.length; m++) {
         this.actors[m].act(this);
+        // Unlike Particles, Actors Do Not All Have An isToDie Flag
+        // So We Make Sure They Have One Before Accessing It
         if (this.actors[m].hasOwnProperty('isToDie') && this.actors[m].isToDie) {
-            delete this.actors[m];
-            spliceActors = true;
-        }
-    }
-
-    if (spliceActors) {
-        for (var n = 0; n < this.actors.length; n++) {
-            if (this.actors[n] === undefined) {
-                this.actors.splice(n, 1);
-                n--;
-            }
+            this.actors.splice(m, 1);
+            m--;
         }
     }
 };
