@@ -60,9 +60,10 @@ ProduceActor.prototype.act = function (system) {
  * If (x,y) Is Inside This Actor
  */
 ProduceActor.prototype.isInBounds = function (x, y) {
-    var isInX = x > this.x && x < this.x + this.radius * 2;
-    var isInY = y > this.y && y < this.y + this.radius * 2;
-    return isInX && isInY;
+    var dx = this.x - x;
+    var dy = this.y - y;
+    var distance = Math.sqrt(dx*dx + dy*dy);
+    return distance <= this.radius;
 };
 
 /**
