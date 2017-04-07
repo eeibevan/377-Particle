@@ -16,14 +16,19 @@
  * @default 10
  * Number of Random Actors To Seed The System With
  *
+ * @param allowRndActors {boolean}
+ * @default true
+ * Flag To Allow Creation of Random Actors
+ *
  * @constructor
  */
-function ParticleSystem(xBound, yBound, n, numActors) {
+function ParticleSystem(xBound, yBound, n, numActors, allowRndActors) {
     this.particles = [];
     this.actors = [];
     this.xBound = xBound;
     this.yBound = yBound;
     this.actorFactor = new ActorFactory();
+    this.allowRndActors = allowRndActors || true;
     this.seed(n || 0, numActors || 10)
 }
 
@@ -174,6 +179,14 @@ ParticleSystem.prototype.update = function () {
         if (this.actors[m].hasOwnProperty('isToDie') && this.actors[m].isToDie) {
             this.actors.splice(m, 1);
             m--;
+        }
+    }
+
+    if (this.allowRndActors) {
+        // Rarely Create Random Explode Actors
+        var rnd = Math.floor(randomRange(1, 500));
+        if (rnd === 15) {
+            this.actors.push(this.actorFactor.makeExplode(randomRange(30, this.xBound-50), randomRange(30, this.yBound-50) , 40));
         }
     }
 };
