@@ -85,7 +85,7 @@ function ParticleSystem(n, xBound, yBound) {
     this.seed(n)
 }
 
-ParticleSystem.prototype.seed = function (n) {
+ParticleSystem.prototype.seed = function (n, actors) {
     for (var i = 0; i < n; i++)
         this.particles.push(
             new Particle(randomRange(10, this.xBound),
@@ -94,10 +94,27 @@ ParticleSystem.prototype.seed = function (n) {
                 randomRange(-2, 2)
             ));
 
-    //this.actors.push(this.actorFactor.makeExplode(this.xBound/2 - 10, this.yBound/2 - 10 , 20));
-    //this.actors.push(this.actorFactor.makeNull(this.xBound/2 - 10, this.yBound/2 - 10 , 20, 'white'));
-    //this.actors.push(this.actorFactor.makeProducer(100, 200, 5, 200, 'green'));
-    //this.actors.push(this.actorFactor.makeKill(400, 500, 20, 'white'));
+    for (var j = actors || 10; j > 0; j--) {
+        var rnd = Math.floor(Math.random() * 5);
+
+        switch (rnd) {
+            case 0:
+                this.actors.push(this.actorFactor.makeNull(randomRange(30, this.xBound-30), randomRange(30, this.yBound-30), 20, 'white'));
+                break;
+            case 1:
+                this.actors.push(this.actorFactor.makeProducer(randomRange(30, this.xBound-35), randomRange(30, this.yBound-35), 25, 200, 'green'));
+                break;
+            case 2:
+                this.actors.push(this.actorFactor.makeKill(randomRange(30, this.xBound-40), randomRange(30, this.yBound-40), 30));
+                break;
+            case 3:
+                this.actors.push(this.actorFactor.makeExplode(randomRange(30, this.xBound-50), randomRange(30, this.yBound-50) , 40));
+                break;
+            default:
+                this.actors.push(this.actorFactor.makeNull(randomRange(30, this.xBound-30), randomRange(30, this.yBound-30), 20, 'white'));
+                break;
+        }
+    }
 };
 
 ParticleSystem.prototype._sortX = function () {
@@ -209,7 +226,7 @@ function CanvasInteractor(canvas, particleSystem) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
-    this.particleSystem = particleSystem || new ParticleSystem(1000, canvas.width, canvas.height);
+    this.particleSystem = particleSystem || new ParticleSystem(0, canvas.width, canvas.height);
 
     window.requestAnimationFrame(this.startUpdates.bind(this))
 }
