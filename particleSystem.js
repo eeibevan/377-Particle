@@ -107,18 +107,24 @@ ParticleSystem.prototype.update = function () {
             }
         }
 
-        // Have Particles 'Wrap Around' The Canvas If They Go Off The Edge
-        // + or - The Radius So The Particle Goes Completely Off Screen Before
-        //  Wrapping
-        if (par.x > this.xBound + par.radius )
-            par.x = 0;
-        else if (par.x < 0 - par.radius)
+        // Bounce Off Or Edges
+        if (par.x > this.xBound + par.radius ) {
             par.x = this.xBound;
+            par.deltaX *= -1;
+        }
+        else if (par.x < 0 - par.radius) {
+            par.x = 0;
+            par.deltaX *= -1;
+        }
 
-        if (par.y > this.yBound + par.radius)
-            par.y = 0;
-        else if (par.y < 0 - par.radius)
+        if (par.y > this.yBound + par.radius) {
             par.y = this.yBound;
+            par.deltaY *= -1;
+        }
+        else if (par.y < 0 - par.radius) {
+            par.y = 0;
+            par.deltaY *= -1;
+        }
 
         if (par.isToDie) {
             spliceParticles = true;
