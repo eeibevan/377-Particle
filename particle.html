@@ -24,7 +24,12 @@
             var canvas = $('#particleCanvas').get(0);
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            tmp = new CanvasInteractor(canvas);
+
+            var sounds = {
+                explode: new Audio('sounds/explode.mp3')
+            };
+
+            tmp = new CanvasInteractor(canvas, sounds);
         });
     </script>
 </head>

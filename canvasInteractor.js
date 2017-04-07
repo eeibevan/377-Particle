@@ -4,16 +4,19 @@
  * @param canvas
  * A Reference To The DOM Canvas
  *
+ * @param [sounds]
+ * Sounds For Each Actor
+ *
  * @param [particleSystem] {ParticleSystem}
  * The Particle System To Draw/Update
  *
  * @constructor
  */
-function CanvasInteractor(canvas, particleSystem) {
+function CanvasInteractor(canvas, sounds, particleSystem) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
-    this.particleSystem = particleSystem || new ParticleSystem(canvas.width, canvas.height, 500);
+    this.particleSystem = particleSystem || new ParticleSystem(canvas.width, canvas.height, 500, 10, sounds);
 
     window.requestAnimationFrame(this.startUpdates.bind(this))
 }

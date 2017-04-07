@@ -16,18 +16,21 @@
  * @default 10
  * Number of Random Actors To Seed The System With
  *
+ * @param [sounds]
+ * Sounds For Each Actor
+ *
  * @param [allowRndActors] {boolean}
  * @default true
  * Flag To Allow Creation of Random Actors
  *
  * @constructor
  */
-function ParticleSystem(xBound, yBound, n, numActors, allowRndActors) {
+function ParticleSystem(xBound, yBound, n, numActors, sounds, allowRndActors) {
     this.particles = [];
     this.actors = [];
     this.xBound = xBound;
     this.yBound = yBound;
-    this.actorFactor = new ActorFactory();
+    this.actorFactor = new ActorFactory(sounds);
     this.allowRndActors = allowRndActors || true;
     this.seed(n || 0, numActors || 10)
 }

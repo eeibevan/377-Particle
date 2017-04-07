@@ -24,7 +24,7 @@
  *
  * @constructor
  */
-function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
+function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit, sound) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -33,6 +33,7 @@ function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
     this._isFuseLit = isFuseLit || false;
     this._playExplodeAnimation = false;
     this._flash = false;
+    this.sound = sound;
     this.explosion = {
         width: width,
         growth: 17,
@@ -53,6 +54,7 @@ function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit) {
  * The System To Kill The Particles In
  */
 ExplodeActor.prototype.explode = function (system) {
+    this.sound.play();
     var particles = system.particles;
     var distance = 0;
     for (var i = 0; i < particles.length; i++) {
@@ -222,5 +224,5 @@ ExplodeActor.prototype.drawExplosionFrame = function (ctx) {
  * @returns {ExplodeActor}
  */
 ActorFactory.prototype.makeExplode = function (x, y, width, color, explodeTicks, isFuseLit) {
-    return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit);
+    return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit, this.sounds.explode);
 };
