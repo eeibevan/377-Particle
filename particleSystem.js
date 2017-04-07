@@ -109,20 +109,20 @@ ParticleSystem.prototype.update = function () {
 
         // Bounce Off Or Edges
         if (par.x > this.xBound + par.radius ) {
-            par.x = this.xBound;
+            par.x = this.xBound + par.radius - 1 ;
             par.deltaX *= -1;
         }
         else if (par.x < 0 - par.radius) {
-            par.x = 0;
+            par.x = 1 - par.radius;
             par.deltaX *= -1;
         }
 
         if (par.y > this.yBound + par.radius) {
-            par.y = this.yBound;
+            par.y = this.yBound + par.radius - 1;
             par.deltaY *= -1;
         }
         else if (par.y < 0 - par.radius) {
-            par.y = 0;
+            par.y = 1 - par.radius;
             par.deltaY *= -1;
         }
 
