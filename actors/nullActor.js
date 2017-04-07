@@ -3,6 +3,9 @@ function NullActor(x, y, width, color) {
     this.y = y;
     this.width = width;
     this.color = color || randomRgbColor();
+    this.text  = 'Nu';
+    this.textColor = 'black';
+    this.fontFamily = "Consolas";
 }
 
 NullActor.prototype.act = function (system) {
@@ -31,10 +34,30 @@ NullActor.prototype.onContact = function (particle) {
         particle.deltaY *= -1;
 };
 
+NullActor.prototype._drawText = function (ctx) {
+    // Save Composite Operation To Restore Later
+    var oldCO = ctx.globalCompositeOperation;
+    ctx.globalCompositeOperation = 'source-atop';
+
+    ctx.fillStyle = this.textColor;
+    ctx.font = Math.ceil(this.width/2) + "px " + this.fontFamily;
+
+    var textWidth = ctx.measureText(this.text).width;
+    // Height May be Approximated By The Width of A Capital E
+    var textHeight = ctx.measureText('E').width;
+
+    // Draws Text In The Center of The Actor
+    // For Some Reason textWidth/3 Gives Us The Middle Here
+    ctx.fillText(this.text, this.x + textWidth/3, this.y + textHeight*2);
+
+    ctx.globalCompositeOperation = oldCO;
+};
+
 NullActor.prototype.draw = function (ctx) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.width);
+    this._drawText(ctx);
 };
 
 ActorFactory.prototype.makeNull = function (x, y, width, color) {
