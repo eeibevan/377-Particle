@@ -1,3 +1,14 @@
+/**
+ * Interactor That Ties Particle System To Canvas
+ *
+ * @param canvas
+ * A Reference To The DOM Canvas
+ *
+ * @param [particleSystem] {ParticleSystem}
+ * The Particle System To Draw/Update
+ *
+ * @constructor
+ */
 function CanvasInteractor(canvas, particleSystem) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
@@ -7,12 +18,18 @@ function CanvasInteractor(canvas, particleSystem) {
     window.requestAnimationFrame(this.startUpdates.bind(this))
 }
 
+/**
+ * Begins Animating The Particle System
+ */
 CanvasInteractor.prototype.startUpdates = function () {
     this.update();
     this.draw();
     window.requestAnimationFrame(this.startUpdates.bind(this));
 };
 
+/**
+ * Draws The Particles And Actors In The System
+ */
 CanvasInteractor.prototype.draw = function () {
     this.ctx.globalCompositeOperation = "source-over";
     this.ctx.fillStyle = 'black';
@@ -29,6 +46,9 @@ CanvasInteractor.prototype.draw = function () {
     }.bind(this))
 };
 
+/**
+ * Updates The System
+ */
 CanvasInteractor.prototype.update = function () {
     this.particleSystem.update();
 };

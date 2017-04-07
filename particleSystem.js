@@ -16,7 +16,7 @@
  * @default 10
  * Number of Random Actors To Seed The System With
  *
- * @param allowRndActors {boolean}
+ * @param [allowRndActors] {boolean}
  * @default true
  * Flag To Allow Creation of Random Actors
  *
@@ -32,6 +32,15 @@ function ParticleSystem(xBound, yBound, n, numActors, allowRndActors) {
     this.seed(n || 0, numActors || 10)
 }
 
+/**
+ * Seed Random Particles And Actors Into The System
+ *
+ * @param n {number}
+ * Number of Particles To Seed
+ *
+ * @param actors
+ * Number of Actors To Seed
+ */
 ParticleSystem.prototype.seed = function (n, actors) {
     for (var i = 0; i < n; i++)
         this.particles.push(
@@ -43,7 +52,6 @@ ParticleSystem.prototype.seed = function (n, actors) {
 
     for (var j = actors; j > 0; j--) {
         var rnd = Math.floor(Math.random() * 5);
-
         switch (rnd) {
             case 0:
                 this.actors.push(this.actorFactor.makeNull(randomRange(30, this.xBound-30), randomRange(30, this.yBound-30), 20));
@@ -85,7 +93,6 @@ ParticleSystem.prototype._sortX = function () {
  */
 ParticleSystem.prototype.update = function () {
     var spliceParticles = false;
-    var spliceActors = false;
     for (var i = 0; i < this.particles.length; i++) {
         var par = this.particles[i];
         par.x += par.deltaX;
