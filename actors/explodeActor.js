@@ -185,14 +185,17 @@ ExplodeActor.prototype.drawExplosionFrame = function (ctx) {
     var oldCO = ctx.globalCompositeOperation;
     ctx.globalCompositeOperation = "lighter";
 
-    var gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.explosion.width);
+    var centerx = this.width/2 + this.x;
+    var centery = this.width/2 + this.y;
+
+    var gradient = ctx.createRadialGradient(centerx, centery, 0, centerx, centery, this.explosion.width);
     gradient.addColorStop(0, "white");
     gradient.addColorStop(0.4, "white");
     gradient.addColorStop(0.4, this.explosion.color);
     gradient.addColorStop(1, "black");
 
     ctx.fillStyle = gradient;
-    ctx.arc(this.x, this.y, this.explosion.width, 0, Math.PI*2, false);
+    ctx.arc(centerx, centery, this.explosion.width, 0, Math.PI*2, false);
     ctx.fill();
 
     ctx.globalCompositeOperation = oldCO;
