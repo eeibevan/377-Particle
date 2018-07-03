@@ -76,6 +76,16 @@ ParticleSystem.prototype.seed = function (n, actors) {
 };
 
 /**
+ * Inserts a new particle into the system
+ *
+ * @param p {Particle}
+ * The particle to insert
+ */
+ParticleSystem.prototype.insertParticle = function (p) {
+    this.particles.push(p);
+};
+
+/**
  * Sorts All Particles By Their X Position
  * @private
  */

@@ -19,17 +19,25 @@
 
     <script src="canvasInteractor.js"></script>
     <script>
-        var tmp;
+        var interactor;
         $( document ).ready(function () {
-            var canvas = $('#particleCanvas').get(0);
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            var canvas = $('#particleCanvas');
+            canvas.get(0).width = window.innerWidth;
+            canvas.get(0).height = window.innerHeight;
 
             var sounds = {
                 explode: new Audio('sounds/explode.mp3')
             };
 
-            tmp = new CanvasInteractor(canvas, sounds);
+            interactor = new CanvasInteractor(canvas.get(0), sounds);
+
+            canvas.click(function (e) {
+                var br = canvas.get(0).getBoundingClientRect();
+                var xPos = e.clientX - br.left;
+                var yPos = e.clientY - br.top;
+
+                interactor.insertParticle(new Particle(xPos, yPos, randomRange(-2, 2), randomRange(-2, 2)));
+            })
         });
     </script>
 </head>

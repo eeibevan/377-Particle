@@ -55,3 +55,13 @@ CanvasInteractor.prototype.draw = function () {
 CanvasInteractor.prototype.update = function () {
     this.particleSystem.update();
 };
+
+/**
+ * Inserts a new particle into the system
+ *
+ * @param p {Particle}
+ * The particle to insert
+ */
+CanvasInteractor.prototype.insertParticle = function (p) {
+    this.particleSystem.insertParticle(p)
+};
