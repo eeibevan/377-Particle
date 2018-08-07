@@ -5,7 +5,6 @@
     <title>Particle</title>
     <link rel="stylesheet" href="particle.css" />
 
-    <script src="lib/jquery-3.2.0.js"></script>
     <script src="util.js"></script>
 
     <script src="actorFactory.js"></script>
@@ -20,25 +19,24 @@
     <script src="canvasInteractor.js"></script>
     <script>
         var interactor;
-        $( document ).ready(function () {
-            var canvas = $('#particleCanvas');
-            canvas.get(0).width = window.innerWidth;
-            canvas.get(0).height = window.innerHeight;
+        window.onload = function () {
+            var canvas = document.getElementById("particleCanvas"); //$('#particleCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
             var sounds = {
                 explode: new Audio('sounds/explode.mp3')
             };
 
-            interactor = new CanvasInteractor(canvas.get(0), sounds);
-
-            canvas.click(function (e) {
-                var br = canvas.get(0).getBoundingClientRect();
+            interactor = new CanvasInteractor(canvas, sounds);
+            canvas.onclick = function (e) {
+                var br = canvas.getBoundingClientRect();
                 var xPos = e.clientX - br.left;
                 var yPos = e.clientY - br.top;
 
                 interactor.insertParticle(new Particle(xPos, yPos, randomRange(-2, 2), randomRange(-2, 2)));
-            })
-        });
+            };
+        };
     </script>
 </head>
 <body>
