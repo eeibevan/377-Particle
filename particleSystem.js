@@ -31,7 +31,12 @@ function ParticleSystem(xBound, yBound, n, numActors, sounds, allowRndActors) {
     this.xBound = xBound;
     this.yBound = yBound;
     this.actorFactor = new ActorFactory(sounds);
-    this.allowRndActors = allowRndActors || true;
+    
+    if (allowRndActors === undefined)
+        this.allowRndActors = true;
+    else
+        this.allowRndActors = allowRndActors;
+
     this.seed(n || 0, numActors || 10)
 }
 
