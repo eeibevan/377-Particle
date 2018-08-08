@@ -3,10 +3,11 @@
  * Body Appended By Each Actor File
  *
  * @param [sounds]
- * Sounds For Each Actor
+ * @default undefined
+ * Sounds For Each Actor. If undefined, then no sounds play.
  *
  * @constructor
  */
 function ActorFactory(sounds) {
-    this.sounds = sounds || {};
+    this.sounds = sounds || undefined;
 }

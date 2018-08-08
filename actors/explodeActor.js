@@ -22,6 +22,10 @@
  * @default false
  * Flag To Create The Actor Ticking Down To Explosion of Not
  *
+ * @param [sound] {HTMLAudioElement}
+ * @default undefined
+ * Sound to play when the actor explodes. If undefined, then no sound is played
+ *
  * @constructor
  */
 function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit, sound) {
@@ -54,7 +58,9 @@ function ExplodeActor(x, y, width, color, explodeTicks, isFuseLit, sound) {
  * The System To Kill The Particles In
  */
 ExplodeActor.prototype.explode = function (system) {
-    this.sound.play();
+    if (this.sound !== undefined)
+        this.sound.play();
+
     var particles = system.particles;
     var distance = 0;
     for (var i = 0; i < particles.length; i++) {
@@ -228,5 +234,8 @@ ExplodeActor.prototype.drawExplosionFrame = function (ctx) {
  * @returns {ExplodeActor}
  */
 ActorFactory.prototype.makeExplode = function (x, y, width, color, explodeTicks, isFuseLit) {
-    return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit, this.sounds.explode);
+    if (this.sounds !== undefined && this.sounds.explode !== undefined)
+        return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit, this.sounds.explode);
+
+    return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit);
 };
