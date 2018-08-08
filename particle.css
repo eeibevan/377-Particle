@@ -29,3 +29,9 @@ h1, h2 {
     border: 1px solid gray;
     width: 50%;
 }
+
+@media screen and (max-width: 992px) {
+    .modal-content {
+        width: 100%;
+    }
+}
