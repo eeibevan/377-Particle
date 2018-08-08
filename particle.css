@@ -5,3 +5,27 @@ canvas {
     margin: 0;
     padding: 0;
 }
+
+h1, h2 {
+    text-align: center;
+}
+
+.modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: black;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid gray;
+    width: 50%;
+}

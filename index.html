@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Particle</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="particle.css" />
 
     <script src="util.js"></script>
-
     <script src="actorFactory.js"></script>
     <script src="actors/nullActor.js"></script>
     <script src="actors/produceActor.js"></script>
@@ -18,28 +19,108 @@
 
     <script src="canvasInteractor.js"></script>
     <script>
+        var setupModal;
         var interactor;
+
         window.onload = function () {
-            var canvas = document.getElementById("particleCanvas"); //$('#particleCanvas');
+            var canvas = document.getElementById("particleCanvas");
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            var sounds = {
-                explode: new Audio('sounds/explode.mp3')
+            setupModal = {
+                modal: document.getElementById("setupModal"),
+                numParticles: document.getElementById("numParticles"),
+                numActors: document.getElementById("numActors"),
+                useSounds: document.getElementById("useSounds"),
+                allowRndActors: document.getElementById("allowRndActors"),
+                submit: document.getElementById("setupModalSubmit"),
+                hide: function () {
+                    this.modal.style.display = "none";
+                }
             };
 
-            interactor = new CanvasInteractor(canvas, sounds);
-            canvas.onclick = function (e) {
-                var br = canvas.getBoundingClientRect();
-                var xPos = e.clientX - br.left;
-                var yPos = e.clientY - br.top;
+            setupModal.submit.onclick = function () {
+                setupModal.hide();
 
-                interactor.insertParticle(new Particle(xPos, yPos, randomRange(-2, 2), randomRange(-2, 2)));
+                var particles = setupModal.numParticles.value || 500;
+                var actors = setupModal.numActors.value || 10;
+
+                var sounds = undefined;
+                if (setupModal.useSounds.checked) {
+                    sounds = {
+                        explode: new Audio('sounds/explode.mp3')
+                    };
+                }
+                var useRndActors = setupModal.allowRndActors.checked;
+
+                var system = new ParticleSystem(canvas.width, canvas.height, particles, actors, sounds, useRndActors);
+
+                interactor = new CanvasInteractor(canvas, sounds, system);
+                canvas.onclick = function (e) {
+                    var br = canvas.getBoundingClientRect();
+                    var xPos = e.clientX - br.left;
+                    var yPos = e.clientY - br.top;
+
+                    interactor.insertParticle(new Particle(xPos, yPos, randomRange(-2, 2), randomRange(-2, 2)));
+                };
             };
         };
     </script>
 </head>
 <body>
 <canvas id="particleCanvas" width="1000" height="700"></canvas>
+<div id="setupModal" class="modal">
+    <div class="modal-content">
+        <h2>Controls</h2>
+        <div>
+            <ol>
+                <li>Click to create a particle</li>
+                <li>Space to pause [Unimplemented]</li>
+            </ol>
+        </div>
+
+        <h2>Settings</h2>
+
+        <h3>Particles</h3>
+        <div class="form-group">
+            <label for="numParticles">Particles:</label>
+            <output id="numParticlesOutput">500</output>
+            <input
+                    type="range"
+                    class="form-control-range"
+                    min="0"
+                    max="2000"
+                    value="500"
+                    oninput="numParticlesOutput.value = numParticles.value"
+                    id="numParticles">
+        </div>
+
+        <h3>Actors</h3>
+        <div class="form-group">
+            <label for="numActors">Actors:</label>
+            <output id="numActorsOutput">10</output>
+            <input
+                    type="range"
+                    class="form-control-range"
+                    min="0"
+                    max="50"
+                    value="10"
+                    oninput="numActorsOutput.value = numActors.value"
+                    id="numActors">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="allowRndActors" checked>
+            <label class="form-check-label" for="allowRndActors">Generate Random Actors</label>
+        </div>
+
+        <h3>Sounds</h3>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="useSounds" checked>
+            <label class="form-check-label" for="useSounds">Play Explosion Sounds</label>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" id="setupModalSubmit">Start</button>
+    </div>
+
+</div>
 </body>
 </html>
