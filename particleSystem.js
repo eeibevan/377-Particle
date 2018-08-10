@@ -185,13 +185,21 @@ ParticleSystem.prototype.update = function () {
     if (spliceParticles) {
         for (var k = 0; k < this.particles.length; k++) {
             if (this.particles[k].isToBurst) {
-                var newPars = Math.floor(this.particles[k].radius/10);
-                for (; newPars > 0; newPars--) {
-                    this.particles.push(
-                        new Particle(
-                            this.particles[k].x, this.particles[k].y,
-                            randomRange(-2,2), randomRange(-2,2))
-                    );
+
+                // Distribute The Burst Particle's Radius
+                // Across Several Particles
+                var radiusToDistribute = this.particles[k].radius;
+                while (radiusToDistribute > 0) {
+                    var radiusSection = Math.round(Math.random() * radiusToDistribute);
+                    if (radiusSection > 0) {
+                        this.particles.push(
+                            new Particle(
+                                this.particles[k].x, this.particles[k].y,
+                                randomRange(-2,2), randomRange(-2,2),
+                                radiusSection)
+                        );
+                    }
+                    radiusToDistribute -= radiusSection;
                 }
                 this.particles[k].isToDie = true;
             }
