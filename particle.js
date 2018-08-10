@@ -80,7 +80,8 @@ Particle.prototype.tick = function () {
  */
 Particle.prototype.absorb = function (particle) {
     // Don't Absorb Invulnerable Particles
-    if (particle.isInvulnerable())
+    // or Particles already being absorbed
+    if (particle.isToDie || particle.isInvulnerable())
         return;
 
     // Don't Absorb Any More It We're About To Burst
