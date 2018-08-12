@@ -63,6 +63,12 @@
 
                     interactor.insertParticle(new Particle(xPos, yPos, randomRange(-2, 2), randomRange(-2, 2)));
                 };
+
+                document.onkeypress = function (e) {
+                    if (e.key === " ") {
+                        interactor.playPause()
+                    }
+                }
             };
         };
     </script>
@@ -75,7 +81,7 @@
         <div>
             <ol>
                 <li>Click to create a particle</li>
-                <li>Space to pause [Unimplemented]</li>
+                <li>Space to pause</li>
             </ol>
         </div>
 

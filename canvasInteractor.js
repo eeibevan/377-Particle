@@ -15,6 +15,7 @@
 function CanvasInteractor(canvas, sounds, particleSystem) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
+    this._run = true;
 
     this.particleSystem = particleSystem || new ParticleSystem(canvas.width, canvas.height, 500, 10, sounds);
 
@@ -27,7 +28,8 @@ function CanvasInteractor(canvas, sounds, particleSystem) {
 CanvasInteractor.prototype.startUpdates = function () {
     this.update();
     this.draw();
-    window.requestAnimationFrame(this.startUpdates.bind(this));
+    if (this._run)
+        window.requestAnimationFrame(this.startUpdates.bind(this));
 };
 
 /**
@@ -64,4 +66,15 @@ CanvasInteractor.prototype.update = function () {
  */
 CanvasInteractor.prototype.insertParticle = function (p) {
     this.particleSystem.insertParticle(p)
+};
+
+/**
+ * Pauses/Resumes the simulation.
+ * Pauses drawing & system updates
+ */
+CanvasInteractor.prototype.playPause = function () {
+    this._run = !this._run;
+    if (this._run) {
+        window.requestAnimationFrame(this.startUpdates.bind(this));
+    }
 };
