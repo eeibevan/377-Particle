@@ -92,6 +92,10 @@ Particle.prototype.absorb = function (particle) {
 
     if (this.radius > this.burstRadius)
         this.isToBurst = true;
+    else { // Compute new movement vector
+        this.deltaX = this.deltaX + particle.deltaX;
+        this.deltaY = this.deltaY + particle.deltaY;
+    }
 
     particle.isToDie = true;
 };
