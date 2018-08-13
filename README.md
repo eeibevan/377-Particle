@@ -1,5 +1,6 @@
 # JS-Particle-System
 A simple particle system implemented in JavaScript
+![Example](extras/images/example.gif)
 
 ## Running
 Either visit the site [here](https://evanpblack.com)
