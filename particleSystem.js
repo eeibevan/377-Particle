@@ -1,3 +1,14 @@
+// If In A node Environment, handle imports
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var randomRange = require('./util').randomRange;
+    var Particle = require('./particle');
+    var ExplodeActor = require('./actors/explodeActor');
+    var KillActor = require('./actors/killActor');
+    var NullActor = require('./actors/nullActor');
+    var ProducerActor = require('./actors/produceActor');
+    var ActorFactory = require('./actorFactory');
+}
+
 /**
  * A System For Simulating PArticle Movement And
  * Actor Interaction
@@ -232,3 +243,7 @@ ParticleSystem.prototype.update = function () {
         }
     }
 };
+
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = ParticleSystem;

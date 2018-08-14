@@ -1,3 +1,7 @@
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var ActorFactory = require('../actorFactory')
+}
+
 /**
  * An Actor That Does Nothing
  *
@@ -136,3 +140,6 @@ NullActor.prototype.draw = function (ctx) {
 ActorFactory.prototype.makeNull = function (x, y, width, color) {
     return new NullActor(x, y, width, color || 'white');
 };
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = NullActor;

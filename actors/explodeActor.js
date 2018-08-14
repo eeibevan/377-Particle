@@ -1,3 +1,7 @@
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var ActorFactory = require('../actorFactory')
+}
+
 /**
  * An Actor That Explodes On Contact
  *
@@ -239,3 +243,7 @@ ActorFactory.prototype.makeExplode = function (x, y, width, color, explodeTicks,
 
     return new ExplodeActor(x, y, width, color, explodeTicks, isFuseLit);
 };
+
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = ExplodeActor;

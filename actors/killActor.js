@@ -1,3 +1,7 @@
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var ActorFactory = require('../actorFactory')
+}
+
 /**
  * An Actor That Kills Particles On Contact
  *
@@ -133,3 +137,6 @@ KillActor.prototype.draw = function (ctx) {
 ActorFactory.prototype.makeKill = function (x, y, width, color) {
     return new KillActor(x, y, width, color);
 };
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = KillActor;

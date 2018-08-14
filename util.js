@@ -16,3 +16,8 @@ function randomRgbColor() {
 function randomRange(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports.randomRgbColor = randomRgbColor;
+    module.exports.randomRange = randomRange;
+}

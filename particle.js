@@ -1,3 +1,9 @@
+
+// If In A node Environment, handle imports
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var randomRgbColor = require('./util').randomRgbColor;
+}
+
 /**
  * Basic Unit of The Particle System
  * Moves About And Interacts With Actors
@@ -140,3 +146,6 @@ Particle.prototype.draw = function (ctx) {
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
     ctx.fill();
 };
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = Particle;

@@ -11,3 +11,6 @@
 function ActorFactory(sounds) {
     this.sounds = sounds || undefined;
 }
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = ActorFactory;

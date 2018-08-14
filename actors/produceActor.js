@@ -1,3 +1,7 @@
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var ActorFactory = require('../actorFactory')
+}
+
 /**
  * Actor The Creates A New Particle After A Specified Number of Ticks
  *
@@ -142,3 +146,7 @@ ProduceActor.prototype.draw = function (ctx) {
 ActorFactory.prototype.makeProducer = function (x, y, radius, ticksPerCreation, color) {
     return new ProduceActor(x, y, radius, ticksPerCreation, color || 'green');
 };
+
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = ProduceActor;
