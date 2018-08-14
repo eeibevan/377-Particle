@@ -185,8 +185,7 @@ ParticleSystem.prototype.update = function () {
             if (!nextP.isToDie) {
                 if (part.isInBounds(nextP.x, nextP.y)) {
                     part.absorb(nextP);
-                    if (part.isToBurst)
-                        spliceParticles = true;
+                    spliceParticles = true;
                 }
             }
             nextIndex++;
