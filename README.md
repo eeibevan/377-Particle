@@ -7,6 +7,19 @@ Either visit the site [here](https://evanpblack.com)
 or clone the project and open index.html.
 Any reasonably modern browser should work.
 
+## Tests
+Running the tests requires Node.
+
+Run the tests by executing:
+```bash
+node test.js
+```
+or
+```bash
+nodejs test.js
+```
+depending on your platform.
+
 ## Rules
 The system is made up of _particles_ and _actors_
 each with their own rules.
