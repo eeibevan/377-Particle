@@ -24,7 +24,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
  * Number of Particles To Seed The System With
  *
  * @param [numActors] {number}
- * @default 10
+ * @default 0
  * Number of Random Actors To Seed The System With
  *
  * @param [sounds]
@@ -48,7 +48,7 @@ function ParticleSystem(xBound, yBound, n, numActors, sounds, allowRndActors) {
     else
         this.allowRndActors = allowRndActors;
 
-    this.seed(n || 0, numActors || 10)
+    this.seed(n || 0, numActors || 0)
 }
 
 /**
