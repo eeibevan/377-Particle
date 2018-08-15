@@ -1,0 +1,5 @@
+image: node:alpine
+
+all-tests:
+  script:
+    - node ./test.js
