@@ -41,6 +41,7 @@ function emptySystem() {
 
 function TestRunner() {
     this._tests = [];
+    this._failedTests = [];
 }
 
 TestRunner.prototype.register = function (name, test) {
@@ -60,13 +61,17 @@ TestRunner.prototype.run = function () {
             console.log(t.name + " Passed")
         } catch (e) {
             failed++;
+            this._failedTests.push(t.name);
             console.log(t.name + " Failed", e)
         }
     }
 
     console.log("Passed " + passed + " Test(s)");
     if (failed > 0) {
-        console.log("Failed " + failed + " Test(s)")
+        console.log("Failed " + failed + " Test(s)");
+        this._failedTests.forEach(function (value) {
+            console.log("Test Failed: " + value);
+        })
     }
 
     return failed === 0;
