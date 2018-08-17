@@ -1,4 +1,5 @@
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var Particle = require('../particle');
     var ActorFactory = require('../actorFactory')
 }
 
