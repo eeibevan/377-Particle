@@ -102,6 +102,16 @@ ParticleSystem.prototype.insertParticle = function (p) {
 };
 
 /**
+ * Insert a new actor into the system
+ *
+ * @param actor
+ * The actor to insert
+ */
+ParticleSystem.prototype.insertActor = function (actor) {
+    this.actors.push(actor);
+};
+
+/**
  * Sorts All Particles By Their X Position
  * @private
  */
