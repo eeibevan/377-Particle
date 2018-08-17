@@ -16,13 +16,13 @@ function assert(message, value) {
         throw new Error("Assert (" + msg + ") Failed For " + value)
 }
 
-function assertEqualL(message, expected, actual) {
+function assertEqualL(message, actual, expected) {
     // noinspection EqualityComparisonWithCoercionJS
     if (expected != actual)
         throw new Error("Assert (" + message + ") Equal Loose Failed For " + expected + " == " + actual);
 }
 
-function assertEqualS(message, expected, actual) {
+function assertEqualS(message, actual, expected) {
     if (expected !== actual)
         throw new Error("Assert (" + message + ") Equal Strict Failed For " + expected + " == " + actual);
 }
