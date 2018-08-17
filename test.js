@@ -39,6 +39,10 @@ function emptySystem() {
     return new ParticleSystem(100, 100, 0, 0, null, false);
 }
 
+function actorFactory() {
+    return new ActorFactory();
+}
+
 function TestRunner() {
     this._tests = [];
     this._failedTests = [];
@@ -79,6 +83,47 @@ TestRunner.prototype.run = function () {
 
 var runner = new TestRunner();
 
+runner.register("[Particle] Basic Absorption", function () {
+    var radius = 1;
+    var leftParticle = new Particle(5, 0, 1, 0, radius);
+
+    var rightParticle = new Particle(6, 0, 0, 0, radius);
+    rightParticle.invulnerabilityTicks = 0;
+
+    leftParticle.absorb(rightParticle);
+    assertEqualS("Radius Should Double", leftParticle.radius, radius * 2);
+
+});
+
+runner.register("[Particle] Setting isToBurst", function () {
+    var leftParticle = new Particle(5, 0, 1, 0, 1);
+    leftParticle.radius = leftParticle.burstRadius; // Make Particle About To Burst
+
+    var rightParticle = new Particle(6, 0, 0, 0, 1);
+    rightParticle.invulnerabilityTicks = 0;
+
+    leftParticle.absorb(rightParticle);
+    assert("Particle Should Be Set To Burst", leftParticle.isToBurst);
+
+});
+
+runner.register("[Particle] Particle Should Not Grow When Set To Burst", function () {
+    var leftParticle = new Particle(5, 0, 1, 0, 1);
+    leftParticle.radius = leftParticle.burstRadius; // Make Particle About To Burst
+
+    var rightParticle = new Particle(6, 0, 0, 0, 1);
+    rightParticle.invulnerabilityTicks = 0;
+
+    leftParticle.absorb(rightParticle);
+    var stopRadius = leftParticle.radius;
+
+    var extraParticle = new Particle(6, 0, 0, 0, 1);
+    extraParticle.invulnerabilityTicks = 0;
+    leftParticle.absorb(extraParticle);
+    assertEqualS("Particle Should Grow After burstRadius Has Been Exceeded", leftParticle.radius, stopRadius);
+
+});
+
 runner.register("[System] Basic Collision", function () {
     var sys = emptySystem();
 
@@ -109,6 +154,24 @@ runner.register("[System] Invulnerable Collision", function () {
     sys.update();
 
     assertEqualS("Should Not Absorb Invulnerable", sys.particles.length, 2);
+});
+
+runner.register("[Producer Actor] Produce A Particle", function () {
+    var sys = emptySystem();
+    sys.insertActor(actorFactory().makeProducer(50, 50, 1, 1));
+    sys.update();
+
+    assertEqualS("Should Produce Exactly One Particle", sys.particles.length, 1)
+
+});
+
+runner.register("[Producer Actor] Don't Produce A Particle Early", function () {
+    var sys = emptySystem();
+    sys.insertActor(actorFactory().makeProducer(50, 50, 1, 2));
+    sys.update();
+
+    assertEqualS("Should Produce No Particles", sys.particles.length, 0)
+
 });
 
 if (!runner.run()) {
