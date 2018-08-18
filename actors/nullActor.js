@@ -71,13 +71,13 @@ NullActor.prototype.onContact = function (particle) {
     var leftY = this.y;
     var rightY = this.y + this.width;
 
-    var oldPosX = particle.x - particle.deltaX;
-    var oldPosY = particle.y - particle.deltaY;
+    var oldPosX = particle.x - particle.velocity.x;
+    var oldPosY = particle.y - particle.velocity.y;
 
     if (oldPosX < lowX || oldPosX > highX)
-        particle.deltaX *= -1;
+        particle.velocity.invertX();
     if (oldPosY < leftY || oldPosY > rightY)
-        particle.deltaY *= -1;
+        particle.velocity.invertY();
 };
 
 /**

@@ -1,6 +1,7 @@
 // If In A node Environment, handle imports
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     var randomRange = require('./util').randomRange;
+    var Vector = require('./vector');
     var Particle = require('./particle');
     var ExplodeActor = require('./actors/explodeActor');
     var KillActor = require('./actors/killActor');
@@ -134,8 +135,7 @@ ParticleSystem.prototype.update = function () {
     var spliceParticles = false;
     for (var i = 0; i < this.particles.length; i++) {
         var par = this.particles[i];
-        par.x += par.deltaX;
-        par.y += par.deltaY;
+        par.applyVelocity();
 
         for (var j = 0; j < this.actors.length; j++) {
             if (this.actors[j].isInBounds(par.x, par.y)) {
@@ -146,20 +146,20 @@ ParticleSystem.prototype.update = function () {
         // Bounce Off Or Edges
         if (par.x > this.xBound + par.radius ) {
             par.x = this.xBound + par.radius - 1 ;
-            par.deltaX *= -1;
+            par.velocity.invertX();
         }
         else if (par.x < 0 - par.radius) {
             par.x = 1 - par.radius;
-            par.deltaX *= -1;
+            par.velocity.invertX();
         }
 
         if (par.y > this.yBound + par.radius) {
             par.y = this.yBound + par.radius - 1;
-            par.deltaY *= -1;
+            par.velocity.invertY();
         }
         else if (par.y < 0 - par.radius) {
             par.y = 1 - par.radius;
-            par.deltaY *= -1;
+            par.velocity.invertY();
         }
 
         if (par.isToDie) {

@@ -78,8 +78,7 @@ ProduceActor.prototype.isInBounds = function (x, y) {
  * The Particle That Made Contact
  */
 ProduceActor.prototype.onContact = function (particle) {
-    particle.deltaX *= -1;
-    particle.deltaY *= -1;
+    particle.velocity.invert();
 };
 
 /**

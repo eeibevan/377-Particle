@@ -2,6 +2,7 @@
 // If In A node Environment, handle imports
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     var randomRgbColor = require('./util').randomRgbColor;
+    var Vector = require('./vector');
 }
 
 /**
@@ -39,8 +40,10 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 function Particle(x, y, deltaX, deltaY, radius, color) {
     this.x = x || 0;
     this.y = y || 0 ;
-    this.deltaX = deltaX || 0;
-    this.deltaY = deltaY || 0;
+    // this.deltaX = deltaX || 0;
+    // this.deltaY = deltaY || 0;
+    this.velocity = new Vector(deltaX || 0, deltaY || 0);
+
     this.radius = radius || Math.ceil(Math.random() * 20);
     this.color = color || randomRgbColor();
     this.invulnerabilityTicks = 30;
@@ -65,6 +68,14 @@ Particle.prototype.isInvulnerable = function () {
 Particle.prototype.tick = function () {
     if (this.invulnerabilityTicks > 0)
         this.invulnerabilityTicks--;
+};
+
+/**
+ * Applies The Particle's Velocity To It's Position
+ */
+Particle.prototype.applyVelocity = function () {
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
 };
 
 /**
@@ -98,10 +109,8 @@ Particle.prototype.absorb = function (particle) {
 
     if (this.radius > this.burstRadius)
         this.isToBurst = true;
-    else { // Compute new movement vector
-        this.deltaX = this.deltaX + particle.deltaX;
-        this.deltaY = this.deltaY + particle.deltaY;
-    }
+    else
+        this.velocity.add(particle.velocity);
 
     particle.isToDie = true;
 };
