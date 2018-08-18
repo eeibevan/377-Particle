@@ -201,6 +201,14 @@ Vector.prototype.toString = function () {
     return "Vector(x:" + this.x + ", y:" + this.y + ")";
 };
 
+/**
+ * Makes A Copy of This Vector
+ * @returns {Vector}
+ */
+Vector.prototype.clone = function () {
+    return new Vector(this.x, this.y);
+};
+
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
     module.exports = Vector;
 
