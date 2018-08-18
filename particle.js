@@ -109,8 +109,14 @@ Particle.prototype.absorb = function (particle) {
 
     if (this.radius > this.burstRadius)
         this.isToBurst = true;
-    else
-        this.velocity.add(particle.velocity);
+    else {
+        var applyVelocity = particle.velocity.clone();
+
+        // Scale The Vector We Add Based On The Ratio of The Sizes
+        applyVelocity.multiplyScalar(particle.radius / this.radius);
+
+        this.velocity.add(applyVelocity);
+    }
 
     particle.isToDie = true;
 };
