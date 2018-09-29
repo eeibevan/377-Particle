@@ -59,13 +59,7 @@ h1, h2 {
     }
 }
 
-.btn,
-.btn:hover,
-.btn:focus,
-.btn:active,
-.btn:visited,
-.btn:active:focus,
-.active{
+.btn {
     background-color: #74689C;
     border: grey;
     color: white
