@@ -43,6 +43,7 @@ function ParticleSystem(xBound, yBound, n, numActors, sounds, allowRndActors) {
     this.xBound = xBound;
     this.yBound = yBound;
     this.actorFactor = new ActorFactory(sounds);
+    this.onTick = function () {};
     
     if (allowRndActors === undefined)
         this.allowRndActors = true;
@@ -113,7 +114,7 @@ ParticleSystem.prototype.insertActor = function (actor) {
 };
 
 /**
- * Gets the first particle at the position (x, y)
+ * Gets the first actor/particle at the position (x, y)
  * returns null if no particle is at that location
  *
  * @param x {number}
@@ -122,14 +123,20 @@ ParticleSystem.prototype.insertActor = function (actor) {
  * @param y {number}
  * The Y coordinate on the canvas
  *
- * @returns {Particle|null}
+ * @returns {ExplodeActor|KillActor|NullActor|ProducerActor|Particle|null}
  * The first Particle at (x, y) or null
  */
-ParticleSystem.prototype.GetParticleAtLocation = function (x, y) {
+ParticleSystem.prototype.getObjectAtLocation = function (x, y) {
     for (var i = 0; i < this.particles.length; i++) {
         var particle = this.particles[i];
         if (particle.isInBounds(x, y))
             return particle;
+    }
+
+    for (var j = 0; j < this.actors.length; j++) {
+        var actor = this.actors[j];
+        if (actor.isInBounds(x, y))
+            return actor;
     }
 
     return null;
@@ -274,6 +281,8 @@ ParticleSystem.prototype.update = function () {
             this.actors.push(this.actorFactor.makeExplode(randomRange(30, this.xBound-50), randomRange(30, this.yBound-50) , 40));
         }
     }
+
+    this.onTick();
 };
 
 

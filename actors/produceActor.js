@@ -35,6 +35,7 @@ function ProduceActor(x, y, radius, ticksPerCreation, color) {
     this.text  = 'Pr';
     this.textColor = 'red';
     this.fontFamily = "Consolas";
+    this.particlesCreated = 0;
 }
 
 /**
@@ -49,6 +50,7 @@ ProduceActor.prototype.act = function (system) {
             new Particle(this.x + this.radius*2, this.y + this.radius*2, Math.random(), Math.random())
         );
         this.createTick = 0;
+        this.particlesCreated++;
     }
 };
 
