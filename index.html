@@ -17,6 +17,7 @@
 
     <script src="particle.js"></script>
     <script src="particleSystem.js"></script>
+    <script src="stats.js"></script>
 
     <script src="canvasInteractor.js"></script>
     <script>
@@ -29,6 +30,7 @@
             var tooltip = {
                 enabled: true,
                 shown: false,
+                activeObject: null,
                 element: document.getElementById("tooltip"),
                 offset: {
                     x: 5,
@@ -93,20 +95,22 @@
                     canvas.onmousemove = function (e) {
                         var xPos = e.clientX - bounds.left;
                         var yPos = e.clientY - bounds.top;
-                        var particle = interactor.particleSystem.GetParticleAtLocation(xPos, yPos);
-                        if (particle !== null) {
-                            tooltip.element.innerHTML =
-                                "<div>Type: Particle</div>"+
-                                "<div>Age: " + particle.age + "</div>" +
-                                "<div>Color: " + particle.color + "</div>" +
-                                "<div>Size: " + particle.radius + "</div>" +
-                                "<div>Velocity: x:" + particle.velocity.x.toFixed(1) +
-                                    " y:" + particle.velocity.y.toFixed(1) +"</div>";
+                        var object = interactor.particleSystem.getObjectAtLocation(xPos, yPos);
+                        if (object !== null) {
+                            tooltip.activeObject = object;
+                            tooltip.element.innerHTML = makeStatsString(object);
                             tooltip.show(xPos + 5, yPos + 5);
                         } else {
                             tooltip.hide();
+                            tooltip.activeObject = null;
                         }
                     };
+
+                    interactor.particleSystem.onTick = function () {
+                        if (tooltip.shown) {
+                            tooltip.element.innerHTML = makeStatsString(tooltip.activeObject);
+                        }
+                    }
                 }
                 document.onkeypress = function (e) {
                     if (e.key === " ") {
