@@ -25,12 +25,37 @@
 
         window.onload = function () {
             var canvas = document.getElementById("particleCanvas");
+            var bounds = canvas.getBoundingClientRect();
+            var tooltip = {
+                enabled: true,
+                shown: false,
+                element: document.getElementById("tooltip"),
+                offset: {
+                    x: 5,
+                    y: 5
+                },
+                show: function (x, y) {
+                    this.element.style.top = y + this.offset.y + "px";
+                    this.element.style.left = x + this.offset.y + "px";
+                    if (!this.shown) {
+                        this.element.style.display = "block";
+                        this.shown = true;
+                    }
+                },
+                hide: function () {
+                    if (this.shown) {
+                        this.element.style.display = "none";
+                        this.shown = false;
+                    }
+                }
+            };
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
             setupModal = {
                 modal: document.getElementById("setupModal"),
                 numParticles: document.getElementById("numParticles"),
+                enableTooltip: document.getElementById("enableTooltip"),
                 numActors: document.getElementById("numActors"),
                 useSounds: document.getElementById("useSounds"),
                 allowRndActors: document.getElementById("allowRndActors"),
@@ -58,13 +83,31 @@
 
                 interactor = new CanvasInteractor(canvas, sounds, system);
                 canvas.onclick = function (e) {
-                    var br = canvas.getBoundingClientRect();
-                    var xPos = e.clientX - br.left;
-                    var yPos = e.clientY - br.top;
+                    var xPos = e.clientX - bounds.left;
+                    var yPos = e.clientY - bounds.top;
 
                     interactor.insertParticle(new Particle(xPos, yPos, randomRange(-2, 2), randomRange(-2, 2)));
                 };
 
+                if (setupModal.enableTooltip.checked) {
+                    canvas.onmousemove = function (e) {
+                        var xPos = e.clientX - bounds.left;
+                        var yPos = e.clientY - bounds.top;
+                        var particle = interactor.particleSystem.GetParticleAtLocation(xPos, yPos);
+                        if (particle !== null) {
+                            tooltip.element.innerHTML =
+                                "<div>Type: Particle</div>"+
+                                "<div>Age: " + particle.age + "</div>" +
+                                "<div>Color: " + particle.color + "</div>" +
+                                "<div>Size: " + particle.radius + "</div>" +
+                                "<div>Velocity: x:" + particle.velocity.x.toFixed(1) +
+                                    " y:" + particle.velocity.y.toFixed(1) +"</div>";
+                            tooltip.show(xPos + 5, yPos + 5);
+                        } else {
+                            tooltip.hide();
+                        }
+                    };
+                }
                 document.onkeypress = function (e) {
                     if (e.key === " ") {
                         interactor.playPause()
@@ -75,6 +118,8 @@
     </script>
 </head>
 <body>
+<!-- Filled with stats by js-->
+<div id="tooltip" style="display: none; position: fixed; z-index: 2"></div>
 <canvas id="particleCanvas" width="1000" height="700"></canvas>
 <div id="setupModal" class="modal">
     <div class="modal-content">
@@ -100,6 +145,10 @@
                     value="500"
                     oninput="numParticlesOutput.value = numParticles.value"
                     id="numParticles">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="enableTooltip" checked>
+            <label class="form-check-label" for="enableTooltip">Enable Tooltips On Mouse Over</label>
         </div>
 
         <h3>Actors</h3>

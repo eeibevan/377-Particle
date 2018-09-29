@@ -4,6 +4,7 @@ canvas {
     left: 0;
     margin: 0;
     padding: 0;
+    z-index: -1;
 }
 
 h1, h2 {
@@ -34,4 +35,10 @@ h1, h2 {
     .modal-content {
         width: 100%;
     }
+}
+
+#tooltip {
+    background-color: lightgray;
+    border-radius: 1em;
+    padding: .5em;
 }

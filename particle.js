@@ -40,8 +40,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 function Particle(x, y, deltaX, deltaY, radius, color) {
     this.x = x || 0;
     this.y = y || 0 ;
-    // this.deltaX = deltaX || 0;
-    // this.deltaY = deltaY || 0;
+
     this.velocity = new Vector(deltaX || 0, deltaY || 0);
 
     this.radius = radius || Math.ceil(Math.random() * 20);
@@ -50,6 +49,7 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
     this.isToBurst = false;
     this.burstRadius = 50;
     this.isToDie = false;
+    this.age = 0;
 }
 
 /**
@@ -59,15 +59,14 @@ function Particle(x, y, deltaX, deltaY, radius, color) {
  * False otherwise
  */
 Particle.prototype.isInvulnerable = function () {
-    return this.invulnerabilityTicks > 0;
+    return this.invulnerabilityTicks > this.age;
 };
 
 /**
  * Advances Particle State (Not Movement)
  */
 Particle.prototype.tick = function () {
-    if (this.invulnerabilityTicks > 0)
-        this.invulnerabilityTicks--;
+    this.age++;
 };
 
 /**

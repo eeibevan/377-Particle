@@ -113,6 +113,29 @@ ParticleSystem.prototype.insertActor = function (actor) {
 };
 
 /**
+ * Gets the first particle at the position (x, y)
+ * returns null if no particle is at that location
+ *
+ * @param x {number}
+ * The X coordinate on the canvas
+ *
+ * @param y {number}
+ * The Y coordinate on the canvas
+ *
+ * @returns {Particle|null}
+ * The first Particle at (x, y) or null
+ */
+ParticleSystem.prototype.GetParticleAtLocation = function (x, y) {
+    for (var i = 0; i < this.particles.length; i++) {
+        var particle = this.particles[i];
+        if (particle.isInBounds(x, y))
+            return particle;
+    }
+
+    return null;
+};
+
+/**
  * Sorts All Particles By Their X Position
  * @private
  */
