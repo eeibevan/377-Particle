@@ -5,6 +5,7 @@ canvas {
     margin: 0;
     padding: 0;
     z-index: -1;
+
 }
 
 h1, h2 {
@@ -24,17 +25,34 @@ h1, h2 {
 }
 
 .modal-content {
-    background-color: white;
-    margin: 15% auto;
+    color: ghostwhite;
+    background-color: #474646;
+    margin: 15vh 30% auto;
     padding: 20px;
     border: 1px solid gray;
-    width: 50%;
+    width: 40%;
 }
 
-@media screen and (max-width: 992px) {
+.modal-controls{
+    margin-bottom: 5%;
+    text-transform: capitalize;
+}
+
+.modal-controls li{
+    font-size: 1.2em;
+}
+
+@media screen and (max-width: 1200px) {
     .modal-content {
-        width: 100%;
+        width: 90%;
+        margin: 15vh 5% auto;
     }
+}
+
+.btn-primary,
+.btn-primary:hover {
+    background-color: #74689C;
+    border: grey;
 }
 
 #tooltip {
