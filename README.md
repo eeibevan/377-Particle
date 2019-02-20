@@ -3,7 +3,7 @@ A simple particle system implemented in JavaScript
 ![Example](extras/images/example.gif)
 
 ## Running
-Either visit the site [here](https://evanpblack.com)
+Either visit the site [here](https://particle.evanpblack.com)
 or clone the project and open index.html.
 Any reasonably modern browser should work.
 
