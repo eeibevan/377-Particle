@@ -51,6 +51,10 @@ h2 {
     transform: scale(1.9);
 }
 
+.modal-content .form-group {
+    margin-bottom: 1.75em;
+}
+
 @media screen and (max-width: 1400px) {
     .modal-content {
         padding: 1em;
