@@ -45,6 +45,12 @@ h2 {
     width: 50%;
 }
 
+.modal-content input[type=checkbox] {
+    /* Slight hack to vertically align the checkbox to its label */
+    margin-top: .5em;
+    transform: scale(1.9);
+}
+
 @media screen and (max-width: 1400px) {
     .modal-content {
         padding: 1em;
