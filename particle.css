@@ -52,7 +52,7 @@ h2 {
 }
 
 .modal-content .form-group {
-    margin-bottom: 1.75em;
+    margin: 1.25em 0;
 }
 
 @media screen and (max-width: 1400px) {
@@ -63,7 +63,7 @@ h2 {
     }
 }
 
-.btn {
+#setupModalSubmit {
     background-color: #74689C;
     border: grey;
     color: white
