@@ -69,6 +69,11 @@ h2 {
         width: 100%;
         margin: 10vh 0 auto;
     }
+
+    .modal-content input[type=checkbox] {
+        margin-top: .3em;
+        transform: scale(1.5);
+    }
 }
 
 #setupModalSubmit {
