@@ -46,7 +46,7 @@ h2 {
 
 .modal-content input[type=checkbox] {
     /* Slight hack to vertically align the checkbox to its label */
-    margin-top: .5em;
+    margin-top: .4em;
     transform: scale(1.9);
 }
 
@@ -57,6 +57,10 @@ h2 {
 /* Hack to remove odd offset on all items in a button group aside from the first one */
 .btn-group-vertical label{
     margin: 0 !important;
+}
+
+.form-check-label {
+    margin-left: .25em;
 }
 
 @media screen and (max-width: 1400px) {
