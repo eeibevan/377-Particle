@@ -65,19 +65,26 @@
 
             setupModal = {
                 modal: document.getElementById("setupModal"),
-                numParticles: document.getElementById("numParticles"),
+                numParticles: document.getElementsByClassName("numParticles"),
                 enableTooltip: document.getElementById("enableTooltip"),
-                numActors: document.getElementById("numActors"),
+                numActors: document.getElementsByClassName("numActors"),
                 useSounds: document.getElementById("useSounds"),
                 allowRndActors: document.getElementById("allowRndActors"),
                 submit: document.getElementById("setupModalSubmit"),
                 hide: function () {
                     this.modal.style.display = "none";
                 },
-                buttonGroupValue: function (buttonGroup, defaultValue) {
+                buttonGroupValue: function (buttonGroups, defaultValue) {
                     var result = defaultValue | 0;
 
-                    var activeLabel = buttonGroup.getElementsByClassName('active')[0];
+                    for (var i = 0; i < buttonGroups.length; i++) {
+                        if (window.getComputedStyle(buttonGroups[i]).display !== 'none') {
+                            var resultGroup = buttonGroups[i];
+                            break;
+                        }
+                    }
+
+                    var activeLabel = resultGroup.getElementsByClassName('active')[0];
                     // Just in case we somehow don't have an active label
                     if (activeLabel) {
                         result = activeLabel.getElementsByTagName('input')[0].getAttribute('value') | 0;
@@ -159,7 +166,34 @@
         <h1>Settings</h1>
 
         <h2>Particles</h2>
-        <div id="numParticles" class="form-group btn-group btn-group-toggle d-flex" data-toggle="buttons">
+        <!-- Selector For Large Screens -->
+        <div class="numParticles form-group btn-group btn-group-toggle btn-group-vertical d-lg-none" data-toggle="buttons">
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="0"> 0
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="100"> 100
+            </label>
+            <label class="btn btn-secondary w-100 active">
+                <input type="radio" name="options" autocomplete="off" value="250" checked> 250
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="500"> 500
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="750"> 750
+            </label>
+
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="1000"> 1000
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="2000"> 2000
+            </label>
+        </div>
+
+        <!-- Selector For Small Screens -->
+        <div class="numParticles form-group btn-group btn-group-toggle d-none d-lg-flex" data-toggle="buttons">
             <label class="btn btn-secondary w-100">
                 <input type="radio" name="options" autocomplete="off" value="0"> 0
             </label>
@@ -189,7 +223,34 @@
         </div>
 
         <h2>Actors</h2>
-        <div id="numActors" class="form-group btn-group btn-group-toggle d-flex" data-toggle="buttons">
+        <!-- Selector For Large Screens -->
+        <div class="numActors form-group btn-group btn-group-toggle btn-group-vertical d-lg-none" data-toggle="buttons">
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="0"> 0
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="5"> 5
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="10"> 10
+            </label>
+            <label class="btn btn-secondary w-100 active">
+                <input type="radio" name="options" autocomplete="off" value="25" checked> 25
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="50"> 50
+            </label>
+
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="75"> 75
+            </label>
+            <label class="btn btn-secondary w-100">
+                <input type="radio" name="options" autocomplete="off" value="100"> 100
+            </label>
+        </div>
+
+        <!-- Selector For Small Screens -->
+        <div class="numActors form-group btn-group btn-group-toggle d-none d-lg-flex" data-toggle="buttons">
             <label class="btn btn-secondary w-100">
                 <input type="radio" name="options" autocomplete="off" value="0"> 0
             </label>

@@ -54,6 +54,11 @@ h2 {
     margin: 1.25em 0;
 }
 
+/* Hack to remove odd offset on all items in a button group aside from the first one */
+.btn-group-vertical label{
+    margin: 0 !important;
+}
+
 @media screen and (max-width: 1400px) {
     .modal-content {
         padding: 1em;
